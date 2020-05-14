@@ -2,4 +2,97 @@ openapi: 3.0.0
 info:
   title: Gameye match API specification
   version: ""
-paths: {}
+paths:
+  /command/start-match:
+    post:
+      operationId: start-match
+      requestBody:
+        content:
+          application/json:
+            schema: {}
+            example: >
+              {}
+      responses:
+        204:
+          description: >
+            Match was started
+        401:
+          description: >
+            You are not authorized
+
+  /command/stop-match:
+    post:
+      operationId: stop-match
+      requestBody:
+        content:
+          application/json:
+            schema: {}
+            example: >
+              {}
+      responses:
+        204:
+          description: >
+            Match was stopped
+        401:
+          description: >
+            You are not authorized
+
+  /query/match:
+    get:
+      operationId: match
+      responses:
+        200:
+          description: >
+            Retrieved all matches
+          content:
+            application/json:
+              schema: {}
+              example: >
+                {}
+        401:
+          description: >
+            You are not authorized
+
+  /query/log:
+    get:
+      operationId: log
+      parameters:
+        - name: matchKey
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: >
+            Retrieved logs for a match
+          content:
+            application/json:
+              schema: {}
+              example: >
+                {}
+        401:
+          description: >
+            You are not authorized
+
+  /query/statistic:
+    get:
+      operationId: statistic
+      parameters:
+        - name: matchKey
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: >
+            Retrieved statistics for a match
+          content:
+            application/json:
+              schema: {}
+              example: >
+                {}
+        401:
+          description: >
+            You are not authorized
