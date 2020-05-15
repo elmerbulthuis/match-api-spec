@@ -13,28 +13,44 @@ jobs:
   publish:
     docker: [image: circleci/python:3.6]
     environment:
-      BUCKET: oas.gameye.com
+      BUCKET: api-spec.gameye.com
     steps:
       - run: sudo pip install awscli
       - attach_workspace: { at: . }
       - run: >
           aws s3 cp
           pub/openapi.yaml
-          s3://$BUCKET/$CIRCLE_PROJECT_REPONAME/$CIRCLE_TAG/openapi.yaml
+          s3://$BUCKET/$CIRCLE_TAG/openapi.yaml
           --content-type 'application/vnd.oai.openapi;version=3.0'
           --cache-control 'max-age=604800'
       - run: >
           aws s3 cp
           pub/openapi.json
-          s3://$BUCKET/$CIRCLE_PROJECT_REPONAME/$CIRCLE_TAG/openapi.json
+          s3://$BUCKET/$CIRCLE_TAG/openapi.json
           --content-type 'application/vnd.oai.openapi+json;version=3.0'
           --cache-control 'max-age=604800'
       - run: >
-          echo $CIRCLE_TAG | aws s3 cp
-          -
-          s3://$BUCKET/$CIRCLE_PROJECT_REPONAME/latest.txt
-          --content-type 'text/plain'
-          --cache-control 'no-cache'
+          aws s3api put-bucket-website
+          --bucket $BUCKET
+          --website-configuration '{
+            "IndexDocument": {"Suffix": "index.html"},
+            "RoutingRules": [
+              {
+                "Condition": {"KeyPrefixEquals": "openapi.yaml"},
+                "Redirect": {
+                  "HttpRedirectCode": "302",
+                  "ReplaceKeyPrefixWith": "'$CIRCLE_TAG'/openapi.yaml",
+                }
+              },
+              {
+                "Condition": {"KeyPrefixEquals": "openapi.json"},
+                "Redirect": {
+                  "HttpRedirectCode": "302",
+                  "ReplaceKeyPrefixWith": "'$CIRCLE_TAG'/openapi.json",
+                }
+              }
+            ]
+          }'
 
 workflows:
   publish:
