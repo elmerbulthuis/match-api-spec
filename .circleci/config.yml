@@ -39,14 +39,14 @@ jobs:
                 "Condition": {"KeyPrefixEquals": "openapi.yaml"},
                 "Redirect": {
                   "HttpRedirectCode": "302",
-                  "ReplaceKeyPrefixWith": "'$CIRCLE_TAG'/openapi.yaml",
+                  "ReplaceKeyPrefixWith": "'$CIRCLE_TAG'/openapi.yaml"
                 }
               },
               {
                 "Condition": {"KeyPrefixEquals": "openapi.json"},
                 "Redirect": {
                   "HttpRedirectCode": "302",
-                  "ReplaceKeyPrefixWith": "'$CIRCLE_TAG'/openapi.json",
+                  "ReplaceKeyPrefixWith": "'$CIRCLE_TAG'/openapi.json"
                 }
               }
             ]
