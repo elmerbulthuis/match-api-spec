@@ -35,13 +35,13 @@ paths:
                 matchKey:
                   type: string
                   minLength: 1
-                  description: >
+                  description: |
                     unique match id
                   example: "my-awesome-match"
                 gameKey:
                   type: string
                   minLength: 1
-                  description: >
+                  description: |
                     game id
                   example: "csgo"
                 locationKeys:
@@ -49,20 +49,20 @@ paths:
                   items:
                     type: string
                     minLength: 1
-                    description: >
+                    description: |
                       location id
                     example: "eu-west"
                   minItems: 1
                 templateKey:
                   type: string
                   minLength: 1
-                  description: >
+                  description: |
                     template id
                   example: "esl1on1"
                 config:
                   type: object
                   additionalProperties: true
-                  description: >
+                  description: |
                     "any custom parameters you want to add"
                 endCallbackUrl:
                   type: string
@@ -82,7 +82,7 @@ paths:
               }
       responses:
         "200":
-          description: >
+          description: |
             Match was started
           content:
             application/json:
@@ -101,7 +101,7 @@ paths:
                     created: 1589471457344
                   }
         "401":
-          description: >
+          description: |
             You are not authorized
 
   /command/stop-match:
@@ -118,16 +118,16 @@ paths:
                 - matchKey
               properties:
                 matchKey: { type: string, minLength: 1 }
-            example: >
+            example: |
               {
                 "matchKey": "my-awesome-match"
               }
       responses:
         "204":
-          description: >
+          description: |
             Match was stopped
         "401":
-          description: >
+          description: |
             You are not authorized
 
   /query/match:
@@ -135,12 +135,12 @@ paths:
       operationId: match
       responses:
         "200":
-          description: >
+          description: |
             Retrieved all matches
           content:
             application/json:
               schema: {}
-              example: >
+              example: |
                 {
                   "match": {
                     "83433e65-caac-4820-b8e7-875b86dd4994": {
@@ -168,7 +168,7 @@ paths:
                   }
                 }
         "401":
-          description: >
+          description: |
             You are not authorized
 
   /query/log:
@@ -181,15 +181,15 @@ paths:
           schema: { type: string, minLength: 1 }
       responses:
         "200":
-          description: >
+          description: |
             Retrieved logs for a match
           content:
             application/json:
               schema: {}
-              example: >
+              example: |
                 {}
         "401":
-          description: >
+          description: |
             You are not authorized
 
   /query/statistic:
@@ -202,15 +202,15 @@ paths:
           schema: { type: string, minLength: 1 }
       responses:
         "200":
-          description: >
+          description: |
             Retrieved statistics for a match
           content:
             application/json:
               schema: {}
-              example: >
+              example: |
                 {}
         "401":
-          description: >
+          description: |
             You are not authorized
 
 components:
