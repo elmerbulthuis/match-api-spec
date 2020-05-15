@@ -136,8 +136,8 @@ paths:
                       "83433e65-caac-4820-b8e7-875b86dd4994": {
                           "matchKey": "83433e65-caac-4820-b8e7-875b86dd4994",
                           "gameKey": "csgo",
-                          "locationKey": "madrid",
-                          "host": "5.188.148.16",
+                          "locationKey": "eu-west",
+                          "host": "127.0.0.1",
                           "created": 1588944190593,
                           "port": {
                               "game": 63857,
