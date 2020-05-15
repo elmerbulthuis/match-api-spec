@@ -21,19 +21,19 @@ jobs:
           aws s3 cp
           pub/openapi.yaml
           s3://$BUCKET/$CIRCLE_PROJECT_REPONAME/$CIRCLE_TAG/openapi.yaml
-          --content-type application/vnd.oai.openapi;version=3.0
+          --content-type 'application/vnd.oai.openapi;version=3.0'
           --cache-control 'max-age=604800'
       - run: >
           aws s3 cp
           pub/openapi.json
           s3://$BUCKET/$CIRCLE_PROJECT_REPONAME/$CIRCLE_TAG/openapi.json
-          --content-type application/vnd.oai.openapi+json;version=3.0
+          --content-type 'application/vnd.oai.openapi+json;version=3.0'
           --cache-control 'max-age=604800'
       - run: >
           echo $CIRCLE_TAG | aws s3 cp
           -
           s3://$BUCKET/$CIRCLE_PROJECT_REPONAME/latest.txt
-          --content-type text/plain
+          --content-type 'text/plain'
           --cache-control 'no-cache'
 
 workflows:
