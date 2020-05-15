@@ -32,7 +32,9 @@ jobs:
       - run: >
           echo $CIRCLE_TAG | aws s3 cp
           -
-          s3://$BUCKET/$CIRCLE_PROJECT_REPONAME/latest
+          s3://$BUCKET/$CIRCLE_PROJECT_REPONAME/latest.txt
+          --content-type text/plain
+          --cache-control 'no-cache'
 
 workflows:
   welcome:
