@@ -41,9 +41,11 @@ workflows:
     jobs:
       - prepare:
           filters:
+            branches: { ignore: /.*/ }
             tags: { only: /^v\d+\.\d+\.\d+$/ }
       - publish:
           context: authorized
           requires: [prepare]
           filters:
+            branches: { ignore: /.*/ }
             tags: { only: /^v\d+\.\d+\.\d+$/ }

@@ -2,7 +2,7 @@ openapi: 3.0.3
 info:
   title: Gameye Game API
   version: "0.0.0-local"
-  contact: 
+  contact:
     name: Gameye "support@gameye.com"
     email: "support@gameye.com"
     url: https://gameye.com
@@ -23,39 +23,39 @@ paths:
                 - templateKey
                 - config
               properties:
-                matchKey: 
+                matchKey:
                   type: string
                   minLength: 1
-                  description: > 
+                  description: >
                     unique match id
                   example: "my-awesome-match"
-                gameKey: 
-                  type: string 
+                gameKey:
+                  type: string
                   minLength: 1
                   description: >
                     game id
                   example: "csgo"
                 locationKeys:
                   type: array
-                  items:  
+                  items:
                     type: string
                     minLength: 1
                     description: >
                       location id
                     example: "eu-west"
                   minItems: 1
-                templateKey: 
-                  type: string 
+                templateKey:
+                  type: string
                   minLength: 1
                   description: >
                     template id
                   example: "esl1on1"
-                config: 
+                config:
                   type: object
                   additionalProperties: true
                   description: >
                     "any custom parameters you want to add"
-                endCallbackUrl: 
+                endCallbackUrl:
                   type: string
                   minLength: 1
                   description: "URL to call when the match has ended, optional"
@@ -75,12 +75,9 @@ paths:
         "204":
           description: >
             Match was started
-<<<<<<< HEAD:src/openapi.yaml
-        "401":
-=======
           content:
             application/json:
-              schema: 
+              schema:
                 type: object
                 example: |
                   {
@@ -94,8 +91,7 @@ paths:
                     },
                     created: 1589471457344
                   }
-        401:
->>>>>>> de85d2b14694a9ae374851a32a62dca3f8e3363d:oas/openapi.yaml
+        "401":
           description: >
             You are not authorized
 
@@ -135,10 +131,6 @@ paths:
             application/json:
               schema: {}
               example: >
-<<<<<<< HEAD:src/openapi.yaml
-                {}
-        "401":
-=======
                 {
                   "match": {
                       "83433e65-caac-4820-b8e7-875b86dd4994": {
@@ -154,8 +146,7 @@ paths:
                       }
                     }
                 }
-        401:
->>>>>>> de85d2b14694a9ae374851a32a62dca3f8e3363d:oas/openapi.yaml
+        "401":
           description: >
             You are not authorized
 
