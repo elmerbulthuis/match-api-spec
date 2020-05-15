@@ -1,11 +1,11 @@
-openapi: 3.0.0
+openapi: 3.0.3
 info:
   title: Gameye Game API
-  contact: 
+  version: "0.0.0-local"
+  contact:
     name: Gameye "support@gameye.com"
     email: "support@gameye.com"
     url: https://gameye.com
-  version: ""
 paths:
   /command/start-match:
     post:
@@ -23,39 +23,39 @@ paths:
                 - templateKey
                 - config
               properties:
-                matchKey: 
+                matchKey:
                   type: string
                   minLength: 1
-                  description: > 
+                  description: >
                     unique match id
                   example: "my-awesome-match"
-                gameKey: 
-                  type: string 
+                gameKey:
+                  type: string
                   minLength: 1
                   description: >
                     game id
                   example: "csgo"
                 locationKeys:
                   type: array
-                  items:  
+                  items:
                     type: string
                     minLength: 1
                     description: >
                       location id
                     example: "eu-west"
                   minItems: 1
-                templateKey: 
-                  type: string 
+                templateKey:
+                  type: string
                   minLength: 1
                   description: >
                     template id
                   example: "esl1on1"
-                config: 
+                config:
                   type: object
                   additionalProperties: true
                   description: >
                     "any custom parameters you want to add"
-                endCallbackUrl: 
+                endCallbackUrl:
                   type: string
                   minLength: 1
                   description: "URL to call when the match has ended, optional"
@@ -72,12 +72,12 @@ paths:
                 "endCallbackUrl": "https://mybackend/matchid"
               }
       responses:
-        204:
+        "204":
           description: >
             Match was started
           content:
             application/json:
-              schema: 
+              schema:
                 type: object
                 example: |
                   {
@@ -91,7 +91,7 @@ paths:
                     },
                     created: 1589471457344
                   }
-        401:
+        "401":
           description: >
             You are not authorized
 
@@ -113,10 +113,10 @@ paths:
                 "matchKey": "my-awesome-match"
               }
       responses:
-        204:
+        "204":
           description: >
             Match was stopped
-        401:
+        "401":
           description: >
             You are not authorized
 
@@ -124,7 +124,7 @@ paths:
     get:
       operationId: match
       responses:
-        200:
+        "200":
           description: >
             Retrieved all matches
           content:
@@ -146,7 +146,7 @@ paths:
                       }
                     }
                 }
-        401:
+        "401":
           description: >
             You are not authorized
 
@@ -159,7 +159,7 @@ paths:
           required: true
           schema: { type: string, minLength: 1 }
       responses:
-        200:
+        "200":
           description: >
             Retrieved logs for a match
           content:
@@ -167,7 +167,7 @@ paths:
               schema: {}
               example: >
                 {}
-        401:
+        "401":
           description: >
             You are not authorized
 
@@ -180,7 +180,7 @@ paths:
           required: true
           schema: { type: string, minLength: 1 }
       responses:
-        200:
+        "200":
           description: >
             Retrieved statistics for a match
           content:
@@ -188,6 +188,6 @@ paths:
               schema: {}
               example: >
                 {}
-        401:
+        "401":
           description: >
             You are not authorized
