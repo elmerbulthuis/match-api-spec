@@ -1,7 +1,11 @@
 openapi: 3.0.3
 info:
-  title: Gameye match API specification
+  title: Gameye Game API
   version: "0.0.0-local"
+  contact: 
+    name: Gameye "support@gameye.com"
+    email: "support@gameye.com"
+    url: https://gameye.com
 paths:
   /command/start-match:
     post:
@@ -19,22 +23,79 @@ paths:
                 - templateKey
                 - config
               properties:
-                matchKey: { type: string, minLength: 1 }
-                gameKey: { type: string, minLength: 1 }
+                matchKey: 
+                  type: string
+                  minLength: 1
+                  description: > 
+                    unique match id
+                  example: "my-awesome-match"
+                gameKey: 
+                  type: string 
+                  minLength: 1
+                  description: >
+                    game id
+                  example: "csgo"
                 locationKeys:
                   type: array
-                  items: { type: string, minLength: 1 }
+                  items:  
+                    type: string
+                    minLength: 1
+                    description: >
+                      location id
+                    example: "eu-west"
                   minItems: 1
-                templateKey: { type: string, minLength: 1 }
-                config: { type: object, additionalProperties: true }
-                endCallbackUrl: { type: string, minLength: 1 }
-            example: >
-              {}
+                templateKey: 
+                  type: string 
+                  minLength: 1
+                  description: >
+                    template id
+                  example: "esl1on1"
+                config: 
+                  type: object
+                  additionalProperties: true
+                  description: >
+                    "any custom parameters you want to add"
+                endCallbackUrl: 
+                  type: string
+                  minLength: 1
+                  description: "URL to call when the match has ended, optional"
+                  example: "https://yourbackend/matchid"
+            example: |
+              {
+                "matchKey": "my-awesome-match"
+                "gameKey": "csgo"
+                "locationKeys": ["eu-west"],
+                "templateKey: "esl1on1",
+                "config": {
+                  "map": "de_dust"
+                },
+                "endCallbackUrl": "https://mybackend/matchid"
+              }
       responses:
         "204":
           description: >
             Match was started
+<<<<<<< HEAD:src/openapi.yaml
         "401":
+=======
+          content:
+            application/json:
+              schema: 
+                type: object
+                example: |
+                  {
+                    "id": "my-awesome-match",
+                    "image": "csgo",
+                    "location": "eu-west",
+                    "host": "127.0.0.1",
+                    "port: {
+                      game: "65424"
+                      query: "53423"
+                    },
+                    created: 1589471457344
+                  }
+        401:
+>>>>>>> de85d2b14694a9ae374851a32a62dca3f8e3363d:oas/openapi.yaml
           description: >
             You are not authorized
 
@@ -74,8 +135,27 @@ paths:
             application/json:
               schema: {}
               example: >
+<<<<<<< HEAD:src/openapi.yaml
                 {}
         "401":
+=======
+                {
+                  "match": {
+                      "83433e65-caac-4820-b8e7-875b86dd4994": {
+                          "matchKey": "83433e65-caac-4820-b8e7-875b86dd4994",
+                          "gameKey": "csgo",
+                          "locationKey": "eu-west",
+                          "host": "127.0.0.1",
+                          "created": 1588944190593,
+                          "port": {
+                              "game": 63857,
+                              "gotv": 57599
+                          }
+                      }
+                    }
+                }
+        401:
+>>>>>>> de85d2b14694a9ae374851a32a62dca3f8e3363d:oas/openapi.yaml
           description: >
             You are not authorized
 
