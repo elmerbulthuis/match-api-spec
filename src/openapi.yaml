@@ -81,7 +81,7 @@ paths:
                 "endCallbackUrl": "https://mybackend/matchid"
               }
       responses:
-        "204":
+        "200":
           description: >
             Match was started
           content:
@@ -143,18 +143,29 @@ paths:
               example: >
                 {
                   "match": {
-                      "83433e65-caac-4820-b8e7-875b86dd4994": {
-                          "matchKey": "83433e65-caac-4820-b8e7-875b86dd4994",
-                          "gameKey": "csgo",
-                          "locationKey": "eu-west",
-                          "host": "127.0.0.1",
-                          "created": 1588944190593,
-                          "port": {
-                              "game": 63857,
-                              "gotv": 57599
-                          }
+                    "83433e65-caac-4820-b8e7-875b86dd4994": {
+                      "matchKey": "83433e65-caac-4820-b8e7-875b86dd4994",
+                      "gameKey": "csgo",
+                      "locationKey": "eu-west",
+                      "host": "127.0.0.1",
+                      "created": 1588944190593,
+                      "port": {
+                        "game": 63857,
+                        "gotv": 57599
+                      }
+                    },
+                    "example-match-1": {
+                      "matchKey": "example-match-1",
+                      "gameKey": "example-game",
+                      "locationKey": "frankfurt",
+                      "host": "84.16.234.88",
+                      "created": 1583164808454,
+                      "port": {
+                        "game": 56900,
+                        "query": 53912
                       }
                     }
+                  }
                 }
         "401":
           description: >
@@ -210,4 +221,4 @@ components:
       bearerFormat: token
 
 externalDocs:
-  url: https://docs.gameye.com/
+  url: https://docs.gameye.com
