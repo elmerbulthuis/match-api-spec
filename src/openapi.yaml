@@ -88,18 +88,18 @@ paths:
             application/json:
               schema:
                 type: object
-                example: |
-                  {
-                    "id": "my-awesome-match",
-                    "image": "csgo",
-                    "location": "eu-west",
-                    "host": "127.0.0.1",
-                    "port: {
-                      game: "65424"
-                      query: "53423"
-                    },
-                    created: 1589471457344
-                  }
+              example: |
+                {
+                  "id": "my-awesome-match",
+                  "image": "csgo",
+                  "location": "eu-west",
+                  "host": "127.0.0.1",
+                  "port: {
+                    game: "65424"
+                    query: "53423"
+                  },
+                  created: 1589471457344
+                }
         "401":
           description: |
             You are not authorized
