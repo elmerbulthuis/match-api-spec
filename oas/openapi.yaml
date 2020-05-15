@@ -1,7 +1,10 @@
 openapi: 3.0.0
 info:
   title: Gameye Game API
-  contact: { name: Gameye "support@gameye.com", email: "support@gameye.com", url: https://gameye.com }
+  contact: 
+    name: Gameye "support@gameye.com"
+    email: "support@gameye.com"
+    url: https://gameye.com
   version: ""
 paths:
   /command/start-match:
@@ -20,15 +23,43 @@ paths:
                 - templateKey
                 - config
               properties:
-                matchKey: { type: string, minLength: 1, description: "unique match id", example: "my-awesome-match" }
-                gameKey: { type: string, minLength: 1, description: "game id", example: "csgo" }
+                matchKey: 
+                  type: string
+                  minLength: 1
+                  description: > 
+                    unique match id
+                  example: "my-awesome-match"
+                gameKey: 
+                  type: string 
+                  minLength: 1
+                  description: >
+                    game id
+                  example: "csgo"
                 locationKeys:
                   type: array
-                  items: { type: string, minLength: 1, description: "location id", example: "eu-west" }
+                  items:  
+                    type: string
+                    minLength: 1
+                    description: >
+                      location id
+                    example: "eu-west"
                   minItems: 1
-                templateKey: { type: string, minLength: 1, description: "template id" }
-                config: { type: object, additionalProperties: true, description: "any custom parameters you want to add" }
-                endCallbackUrl: { type: string, minLength: 1, description: "URL to call when the match has ended, optional" }
+                templateKey: 
+                  type: string 
+                  minLength: 1
+                  description: >
+                    template id
+                  example: "esl1on1"
+                config: 
+                  type: object
+                  additionalProperties: true
+                  description: >
+                    "any custom parameters you want to add"
+                endCallbackUrl: 
+                  type: string
+                  minLength: 1
+                  description: "URL to call when the match has ended, optional"
+                  example: "https://yourbackend/matchid"
             example: |
               {
                 "matchKey": "my-awesome-match"
@@ -101,7 +132,19 @@ paths:
               schema: {}
               example: >
                 {
-                  "matchKey": "my-awesome-match"
+                  "match": {
+                      "83433e65-caac-4820-b8e7-875b86dd4994": {
+                          "matchKey": "83433e65-caac-4820-b8e7-875b86dd4994",
+                          "gameKey": "csgo",
+                          "locationKey": "madrid",
+                          "host": "5.188.148.16",
+                          "created": 1588944190593,
+                          "port": {
+                              "game": 63857,
+                              "gotv": 57599
+                          }
+                      }
+                    }
                 }
         401:
           description: >
