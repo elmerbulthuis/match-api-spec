@@ -1,4 +1,5 @@
 openapi: 3.0.0
+
 info:
   title: Gameye Game API
   version: "0.0.0-local"
@@ -6,6 +7,13 @@ info:
     name: Gameye "support@gameye.com"
     email: "support@gameye.com"
     url: https://gameye.com
+
+servers:
+  - url: htts://api.gameye.com
+
+security:
+  - api-token: []
+
 paths:
   /command/start-match:
     post:
@@ -193,3 +201,13 @@ paths:
         "401":
           description: >
             You are not authorized
+
+components:
+  securitySchemes:
+    api-token:
+      type: http
+      scheme: bearer
+      bearerFormat: token
+
+externalDocs:
+  url: https://docs.gameye.com/
