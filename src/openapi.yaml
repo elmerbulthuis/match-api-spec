@@ -53,10 +53,10 @@ paths:
                   items:
                     type: string
                     minLength: 1
-                    description: |
-                      location id
                     example: "eu-west"
                   minItems: 1
+                  description: |
+                    location id
                 templateKey:
                   type: string
                   minLength: 1
@@ -67,7 +67,7 @@ paths:
                   type: object
                   additionalProperties: true
                   description: |
-                    "any custom parameters you want to add"
+                    any custom parameters you want to add
                 endCallbackUrl:
                   type: string
                   minLength: 1
