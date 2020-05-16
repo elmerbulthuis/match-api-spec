@@ -9,7 +9,7 @@ info:
     url: https://gameye.com
 
 servers:
-  - url: htts://api.gameye.com
+  - url: https://api.gameye.com
 
 security:
   - api-token: []
