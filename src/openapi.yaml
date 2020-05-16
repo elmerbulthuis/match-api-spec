@@ -374,3 +374,7 @@ components:
 
 externalDocs:
   url: https://docs.gameye.com
+
+x-explorer-enabled: false
+x-proxy-enabled: false
+x-samples-enabled: true
