@@ -118,6 +118,10 @@ paths:
         Stop a match
       description: |
         Force shutdown the game server
+
+        📘Important
+        Depending on the game server it can take up to 20 seconds before the shutdown is completed.
+       
       requestBody:
         required: true
         content:
@@ -188,9 +192,6 @@ paths:
         "401":
           description: |
             You are not authorized
-        "404":
-          description: |
-            Match was not found
 
   /query/log:
     get:
@@ -324,6 +325,20 @@ paths:
         Get artifacts
       description: |
         Start download of an artifact
+
+        📘Important
+        Depending on the game server it can take up to 20 seconds before the shutdown is completed.
+
+        ## Providing the path parameter
+        The path should be an absolute Linux path to a specific file or folder.
+
+        Example:
+        /home/{user}/{game-folder-name}/crashdump.log
+
+        ## Downloading the artefact
+        When you fetch the artifact a download of .tar.gz archive will be started that contains your requested file or folder. Please limit your download in size to a maximum of 100mb.
+
+        Please note that the artifact will be directly downloaded from the container itself.
       parameters:
         - name: session
           in: query
