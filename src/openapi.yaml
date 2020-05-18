@@ -18,10 +18,10 @@ paths:
   /command/start-match:
     post:
       operationId: start-match
-      summary: |
-        Create match
+      summary: "Create match"
       description: |
         Create a new on-demand game server
+      tags: ["Create Match"]
       requestBody:
         required: true
         content:
@@ -110,12 +110,14 @@ paths:
         "401":
           description: |
             You are not authorized
+        "503":
+          description: |
+            Location temporary out of capacity 
 
   /command/stop-match:
     post:
       operationId: stop-match
-      summary: |
-        Stop a match
+      summary: "Stop a match"
       description: |
         Force shutdown the game server
 
@@ -151,8 +153,7 @@ paths:
   /query/match:
     get:
       operationId: match
-      summary: |
-        Get matches
+      summary: "Get matches"
       description: |
         Fetch a list of all active sessions
       responses:
@@ -196,7 +197,7 @@ paths:
   /query/log:
     get:
       operationId: log
-      summary: Get logs
+      summary: "Get logs"
       description: |
         Fetch the console log output of the game server
       parameters:
@@ -240,8 +241,7 @@ paths:
   /query/statistic:
     get:
       operationId: statistic
-      summary: |
-        Get statistics
+      summary: "Get statistics"
       description: |
         Fetch team and player statistics of the match
       parameters:
@@ -321,8 +321,7 @@ paths:
   /query/artifacts:
     get:
       operationId: artifacts
-      summary: |
-        Get artifacts
+      summary: "Get artifacts"
       description: |
         Start download of an artifact
 
