@@ -18,10 +18,10 @@ paths:
   /command/start-match:
     post:
       operationId: start-match
+      tags: ["Create Match"]
       summary: "Create match"
       description: |
         Create a new on-demand game server
-      tags: ["Create Match"]
       requestBody:
         required: true
         content:
@@ -123,7 +123,7 @@ paths:
 
         📘Important
         Depending on the game server it can take up to 20 seconds before the shutdown is completed.
-       
+      tags: ["Stop Match"]
       requestBody:
         required: true
         content:
@@ -153,6 +153,7 @@ paths:
   /query/match:
     get:
       operationId: match
+      tags: ["Get Matches"]
       summary: "Get matches"
       description: |
         Fetch a list of all active sessions
@@ -197,6 +198,7 @@ paths:
   /query/log:
     get:
       operationId: log
+      tags: ["Get Logs"]
       summary: "Get logs"
       description: |
         Fetch the console log output of the game server
@@ -241,6 +243,7 @@ paths:
   /query/statistic:
     get:
       operationId: statistic
+      tags: ["Get Statistics"]
       summary: "Get statistics"
       description: |
         Fetch team and player statistics of the match
@@ -321,6 +324,7 @@ paths:
   /query/artifacts:
     get:
       operationId: artifacts
+      tags: ["Get Artifacts"]
       summary: "Get artifacts"
       description: |
         Start download of an artifact
