@@ -121,8 +121,9 @@ paths:
       description: |
         Force shutdown the game server
 
-        📘Important
-        Depending on the game server it can take up to 20 seconds before the shutdown is completed.
+        > 📘 Important
+        > 
+        > Depending on the game server it can take up to 20 seconds before the shutdown is completed.
       tags: ["Stop Match"]
       requestBody:
         required: true
@@ -247,6 +248,11 @@ paths:
       summary: "Get statistics"
       description: |
         Fetch team and player statistics of the match
+
+        > 📘 Important
+        > 
+        > Statistics are disabled by default, please contact our support department if you would like to expose statistics of your game. 
+        > The stats are only availble post-match unless you connect via our realtime API, which is available on a request basis.
       parameters:
         - name: matchKey
           in: query
@@ -329,9 +335,6 @@ paths:
       description: |
         Start download of an artifact
 
-        📘Important
-        Depending on the game server it can take up to 20 seconds before the shutdown is completed.
-
         ## Providing the path parameter
         The path should be an absolute Linux path to a specific file or folder.
 
@@ -342,6 +345,10 @@ paths:
         When you fetch the artifact a download of .tar.gz archive will be started that contains your requested file or folder. Please limit your download in size to a maximum of 100mb.
 
         Please note that the artifact will be directly downloaded from the container itself.
+
+        > 📘 Important
+        > 
+        > Vitae reprehenderit at aliquid error voluptates eum dignissimos.
       parameters:
         - name: session
           in: query
