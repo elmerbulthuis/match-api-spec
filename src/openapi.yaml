@@ -1,7 +1,7 @@
 openapi: 3.0.0
 
 info:
-  title: Gameye Game API
+  title: Game API
   version: "0.0.0-local"
   contact:
     name: Gameye "support@gameye.com"
@@ -18,7 +18,7 @@ paths:
   /command/start-match:
     post:
       operationId: start-match
-      tags: ["Create Match"]
+      tags: ["game"]
       summary: "Create match"
       description: |
         Create a new on-demand game server
@@ -117,6 +117,7 @@ paths:
   /command/stop-match:
     post:
       operationId: stop-match
+      tags: ["game"]
       summary: "Stop a match"
       description: |
         Force shutdown the game server
@@ -153,7 +154,8 @@ paths:
 
   /query/match:
     get:
-      operationId: match
+      operationId: get-matches
+      tags: ["game"]
       tags: ["Get Matches"]
       summary: "Get matches"
       description: |
@@ -199,7 +201,7 @@ paths:
   /query/log:
     get:
       operationId: log
-      tags: ["Get Logs"]
+      tags: ["game"]
       summary: "Get logs"
       description: |
         Fetch the console log output of the game server
@@ -244,7 +246,7 @@ paths:
   /query/statistic:
     get:
       operationId: statistic
-      tags: ["Get Statistics"]
+      tags: ["game"]
       summary: "Get statistics"
       description: |
         Fetch team and player statistics of the match
@@ -330,7 +332,7 @@ paths:
   /query/artifacts:
     get:
       operationId: artifacts
-      tags: ["Get Artifacts"]
+      tags: ["game"]
       summary: "Get artifacts"
       description: |
         Start download of an artifact
@@ -344,11 +346,9 @@ paths:
         ## Downloading the artefact
         When you fetch the artifact a download of .tar.gz archive will be started that contains your requested file or folder. Please limit your download in size to a maximum of 100mb.
 
-        Please note that the artifact will be directly downloaded from the container itself.
-
         > 📘 Important
         > 
-        > Vitae reprehenderit at aliquid error voluptates eum dignissimos.
+        > Please note that the artifact is only available for download post-match and will be downloaded directly from the container itself.
       parameters:
         - name: session
           in: query
