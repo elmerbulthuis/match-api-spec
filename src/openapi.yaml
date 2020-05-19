@@ -125,7 +125,6 @@ paths:
         > 📘 Important
         > 
         > Depending on the game server it can take up to 20 seconds before the shutdown is completed.
-      tags: ["Stop Match"]
       requestBody:
         required: true
         content:
