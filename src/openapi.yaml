@@ -112,7 +112,7 @@ paths:
             You are not authorized
         "503":
           description: |
-            Location temporary out of capacity 
+            Location temporary out of capacity
 
   /command/stop-match:
     post:
@@ -154,7 +154,6 @@ paths:
   /query/match:
     get:
       operationId: get-matches
-      tags: ["game"]
       tags: ["Get Matches"]
       summary: "Get matches"
       description: |
@@ -358,7 +357,7 @@ paths:
         - name: path
           in: query
           required: true
-          description:  |
+          description: |
             local container path to the file or folder you want to download
           schema: { type: string, minLength: 1 }
       responses:

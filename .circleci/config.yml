@@ -25,6 +25,12 @@ jobs:
       - attach_workspace: { at: . }
       - run: >
           aws s3 cp
+          pub/index.html
+          s3://$BUCKET/$CIRCLE_TAG/index.html
+          --content-type 'text/html'
+          --cache-control 'max-age=604800'
+      - run: >
+          aws s3 cp
           pub/openapi.yaml
           s3://$BUCKET/$CIRCLE_TAG/openapi.yaml
           --content-type 'application/vnd.oai.openapi;version=3.0'
@@ -41,6 +47,13 @@ jobs:
           --website-configuration '{
             "IndexDocument": {"Suffix": "index.html"},
             "RoutingRules": [
+              {
+                "Condition": {"KeyPrefixEquals": "index.html"},
+                "Redirect": {
+                  "HttpRedirectCode": "302",
+                  "ReplaceKeyPrefixWith": "'$CIRCLE_TAG'/index.html"
+                }
+              },
               {
                 "Condition": {"KeyPrefixEquals": "openapi.yaml"},
                 "Redirect": {
