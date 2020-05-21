@@ -1,12 +1,14 @@
 openapi: 3.0.0
 
 info:
-  title: Game API
+  title: Gameye Match API
   version: "0.0.0-local"
-  contact:
-    name: Gameye "support@gameye.com"
-    email: "support@gameye.com"
-    url: https://gameye.com
+  description: |
+    # Authentication
+    We use Bearer Tokens for authentication. 
+    You must send this token in the Authorization header in all requests.
+
+    ```Authorization: Bearer <token>```
 
 servers:
   - url: https://api.gameye.com
@@ -18,8 +20,7 @@ paths:
   /command/start-match:
     post:
       operationId: start-match
-      tags: ["game"]
-      summary: "Create match"
+      summary: "Create a match"
       description: |
         Create a new on-demand game server
       requestBody:
@@ -73,12 +74,13 @@ paths:
                   minLength: 1
                   description: "URL to call when the match has ended, optional"
                   example: "https://yourbackend/matchid"
+            x-codeSamples: ""
             example:
               {
                 "matchKey": "my-awesome-match",
-                "gameKey": "csgo",
+                "gameKey": "shooter-game",
                 "locationKeys": ["eu-west"],
-                "templateKey": "esl1on1",
+                "templateKey": "deathmatch",
                 "config": { "map": "de_dust" },
                 "endCallbackUrl": "https://mybackend/matchid",
               }
@@ -93,7 +95,7 @@ paths:
               example:
                 {
                   "id": "my-awesome-match",
-                  "image": "csgo",
+                  "image": "shooter-game",
                   "location": "eu-west",
                   "host": "127.0.0.1",
                   "port": { "game": 65424, "query": 53423 },
@@ -105,6 +107,9 @@ paths:
         "401":
           description: |
             You are not authorized
+        "409":
+          description: |
+            MatchKey has already been used
         "503":
           description: |
             Location temporary out of capacity
@@ -112,12 +117,11 @@ paths:
   /command/stop-match:
     post:
       operationId: stop-match
-      tags: ["game"]
       summary: "Stop a match"
       description: |
         Force shutdown the game server
 
-        > 📘 Important
+        > ### Important
         > 
         > Depending on the game server it can take up to 20 seconds before the shutdown is completed.
       requestBody:
@@ -142,12 +146,14 @@ paths:
         "404":
           description: |
             Match was not found
+        "409":
+          description: |
+            Match has already been stopped
 
   /query/match:
     get:
       operationId: get-matches
-      tags: ["Get Matches"]
-      summary: "Get matches"
+      summary: "Get all matches"
       description: |
         Fetch a list of all active sessions
       responses:
@@ -164,7 +170,7 @@ paths:
                       "83433e65-caac-4820-b8e7-875b86dd4994":
                         {
                           "matchKey": "83433e65-caac-4820-b8e7-875b86dd4994",
-                          "gameKey": "csgo",
+                          "gameKey": "shooter-game",
                           "locationKey": "eu-west",
                           "host": "127.0.0.1",
                           "created": 1588944190593,
@@ -188,8 +194,7 @@ paths:
   /query/log:
     get:
       operationId: log
-      tags: ["game"]
-      summary: "Get logs"
+      summary: "Get match logs"
       description: |
         Fetch the console log output of the game server
       parameters:
@@ -229,12 +234,11 @@ paths:
   /query/statistic:
     get:
       operationId: statistic
-      tags: ["game"]
-      summary: "Get statistics"
+      summary: "Get match statistics"
       description: |
         Fetch team and player statistics of the match
 
-        > 📘 Important
+        > ### Important
         > 
         > Statistics are disabled by default, please contact our support department if you would like to expose statistics of your game. 
         > The stats are only availble post-match unless you connect via our realtime API, which is available on a request basis.
@@ -308,21 +312,20 @@ paths:
   /query/artifacts:
     get:
       operationId: artifacts
-      tags: ["game"]
-      summary: "Get artifacts"
+      summary: "Get match artifacts"
       description: |
         Start download of an artifact
 
-        ## Providing the path parameter
+        ### Providing the path parameter
         The path should be an absolute Linux path to a specific file or folder.
 
         Example:
         /home/{user}/{game-folder-name}/crashdump.log
 
-        ## Downloading the artefact
+        ### Downloading the artefact
         When you fetch the artifact a download of .tar.gz archive will be started that contains your requested file or folder. Please limit your download in size to a maximum of 100mb.
 
-        > 📘 Important
+        > ### Important
         > 
         > Please note that the artifact is only available for download post-match and will be downloaded directly from the container itself.
       parameters:
