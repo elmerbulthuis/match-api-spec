@@ -73,16 +73,14 @@ paths:
                   minLength: 1
                   description: "URL to call when the match has ended, optional"
                   example: "https://yourbackend/matchid"
-            example: |
+            example:
               {
-                "matchKey": "my-awesome-match"
-                "gameKey": "csgo"
+                "matchKey": "my-awesome-match",
+                "gameKey": "csgo",
                 "locationKeys": ["eu-west"],
-                "templateKey: "esl1on1",
-                "config": {
-                  "map": "de_dust"
-                },
-                "endCallbackUrl": "https://mybackend/matchid"
+                "templateKey": "esl1on1",
+                "config": { "map": "de_dust" },
+                "endCallbackUrl": "https://mybackend/matchid",
               }
       responses:
         "200":
@@ -92,17 +90,14 @@ paths:
             application/json:
               schema:
                 type: object
-              example: |
+              example:
                 {
                   "id": "my-awesome-match",
                   "image": "csgo",
                   "location": "eu-west",
                   "host": "127.0.0.1",
-                  "port: {
-                    game: "65424"
-                    query: "53423"
-                  },
-                  created: 1589471457344
+                  "port": { "game": 65424, "query": 53423 },
+                  "created": 1589471457344,
                 }
         "400":
           description: |
@@ -136,10 +131,7 @@ paths:
                 - matchKey
               properties:
                 matchKey: { type: string, minLength: 1 }
-            example: |
-              {
-                "matchKey": "my-awesome-match"
-              }
+            example: { "matchKey": "my-awesome-match" }
       responses:
         "204":
           description: |
@@ -165,32 +157,29 @@ paths:
           content:
             application/json:
               schema: {}
-              example: |
+              example:
                 {
-                  "match": {
-                    "83433e65-caac-4820-b8e7-875b86dd4994": {
-                      "matchKey": "83433e65-caac-4820-b8e7-875b86dd4994",
-                      "gameKey": "csgo",
-                      "locationKey": "eu-west",
-                      "host": "127.0.0.1",
-                      "created": 1588944190593,
-                      "port": {
-                        "game": 63857,
-                        "gotv": 57599
-                      }
+                  "match":
+                    {
+                      "83433e65-caac-4820-b8e7-875b86dd4994":
+                        {
+                          "matchKey": "83433e65-caac-4820-b8e7-875b86dd4994",
+                          "gameKey": "csgo",
+                          "locationKey": "eu-west",
+                          "host": "127.0.0.1",
+                          "created": 1588944190593,
+                          "port": { "game": 63857, "gotv": 57599 },
+                        },
+                      "76ffc16c-6b0b-4d55-bf8d-ae74b6d962ae":
+                        {
+                          "matchKey": "76ffc16c-6b0b-4d55-bf8d-ae74b6d962ae",
+                          "gameKey": "shooter-game",
+                          "locationKey": "us-central",
+                          "host": "192.168.1.1",
+                          "created": 1583164808454,
+                          "port": { "game": 56900, "query": 53912 },
+                        },
                     },
-                    "76ffc16c-6b0b-4d55-bf8d-ae74b6d962ae": {
-                      "matchKey": "76ffc16c-6b0b-4d55-bf8d-ae74b6d962ae",
-                      "gameKey": "shooter-game",
-                      "locationKey": "us-central",
-                      "host": "192.168.1.1",
-                      "created": 1583164808454,
-                      "port": {
-                        "game": 56900,
-                        "query": 53912
-                      }
-                    }
-                  }
                 }
         "401":
           description: |
@@ -215,24 +204,20 @@ paths:
           content:
             application/json:
               schema: {}
-              example: |
+              example:
                 {
-                  "3": {
-                    "lineKey": 3,
-                    "payload": "Server will auto-restart if there is a crash.\r"
-                  },
-                  "4": {
+                  "3":
+                    {
+                      "lineKey": 3,
+                      "payload": "Server will auto-restart if there is a crash.\n",
+                    },
+                  "4":
+                    {
                       "lineKey": 4,
-                      "payload": "LD_LIBRARY_PATH=/home/steam/csgo/bin:/home/steam/csgo:/home/steam/csgo/bin:\r"
-                  },
-                  "5": {
-                      "lineKey": 5,
-                      "payload": "#\r"
-                  },
-                  "6": {
-                      "lineKey": 6,
-                      "payload": "#Console initialized.\r"
-                  }
+                      "payload": "LD_LIBRARY_PATH=/home/steam/csgo/bin:/home/steam/csgo:/home/steam/csgo/bin:\n",
+                    },
+                  "5": { "lineKey": 5, "payload": "#\n" },
+                  "6": { "lineKey": 6, "payload": "#Console initialized.\n" },
                 }
         "401":
           description: |
@@ -265,60 +250,53 @@ paths:
           content:
             application/json:
               schema: {}
-              example: |
+              example:
                 {
-                  "statistic": {
+                  "statistic":
+                    {
                       "start": 1582898480000,
                       "stop": 1582899086000,
                       "startedRounds": 6,
                       "finishedRounds": 6,
-                      "player": {
-                          "3": {
+                      "player":
+                        {
+                          "3":
+                            {
                               "connected": false,
                               "playerKey": "3",
                               "uid": "BOT",
                               "name": "Brad",
-                              "statistic": {
-                                  "assist": 0,
-                                  "death": 5,
-                                  "kill": 3
-                              }
-                          }
-                          "5": {
+                              "statistic":
+                                { "assist": 0, "death": 5, "kill": 3 },
+                            },
+                          "5":
+                            {
                               "connected": false,
                               "playerKey": "5",
                               "uid": "BOT",
                               "name": "Wayne",
-                              "statistic": {
-                                  "assist": 1,
-                                  "death": 3,
-                                  "kill": 5
-                              }
-                          }
-                      },
-                      "team": {
-                          "1": {
+                              "statistic":
+                                { "assist": 1, "death": 3, "kill": 5 },
+                            },
+                        },
+                      "team":
+                        {
+                          "1":
+                            {
                               "teamKey": "1",
                               "name": "Counter Terrorists",
-                              "statistic": {
-                                  "score": 3
-                              },
-                              "player": {
-                                  "3": true
-                              }
-                          },
-                          "2": {
+                              "statistic": { "score": 3 },
+                              "player": { "3": true },
+                            },
+                          "2":
+                            {
                               "teamKey": "2",
                               "name": "Terrorists",
-                              "statistic": {
-                                  "score": 3
-                              },
-                              "player": {
-                                  "5": true
-                              }
-                          }
-                        }
-                    }
+                              "statistic": { "score": 3 },
+                              "player": { "5": true },
+                            },
+                        },
+                    },
                 }
         "401":
           description: |
