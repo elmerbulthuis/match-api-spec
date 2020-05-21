@@ -48,24 +48,10 @@ jobs:
             "IndexDocument": {"Suffix": "index.html"},
             "RoutingRules": [
               {
-                "Condition": {"KeyPrefixEquals": "index.html"},
+                "Condition": {"KeyPrefixEquals": "latest"},
                 "Redirect": {
                   "HttpRedirectCode": "302",
-                  "ReplaceKeyPrefixWith": "'$CIRCLE_TAG'/index.html"
-                }
-              },
-              {
-                "Condition": {"KeyPrefixEquals": "openapi.yaml"},
-                "Redirect": {
-                  "HttpRedirectCode": "302",
-                  "ReplaceKeyPrefixWith": "'$CIRCLE_TAG'/openapi.yaml"
-                }
-              },
-              {
-                "Condition": {"KeyPrefixEquals": "openapi.json"},
-                "Redirect": {
-                  "HttpRedirectCode": "302",
-                  "ReplaceKeyPrefixWith": "'$CIRCLE_TAG'/openapi.json"
+                  "ReplaceKeyPrefixWith": "'$CIRCLE_TAG'"
                 }
               }
             ]
