@@ -1,6 +1,3 @@
 #!/bin/sh
 
-set -e # Exit immediately if a command exits with a non-zero status.
-
-npm run compile
-npm run lint
+npx @redocly/openapi-cli validate src/openapi.yaml
