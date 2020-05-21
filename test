@@ -1,0 +1,3 @@
+#!/bin/sh
+
+npx @redocly/openapi-cli validate src/openapi.yaml
