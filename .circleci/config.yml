@@ -10,6 +10,12 @@ jobs:
           root: .
           paths: [pub]
 
+  test:
+    docker: [image: circleci/node:12]
+    steps:
+      - checkout
+      - run: ./test
+
   publish:
     docker: [image: circleci/python:3.6]
     environment:
@@ -53,6 +59,11 @@ jobs:
           }'
 
 workflows:
+  test:
+    jobs:
+      - test:
+          filters:
+            tags: { only: /^v\d+\.\d+\.\d+$/ }
   publish:
     jobs:
       - prepare:
