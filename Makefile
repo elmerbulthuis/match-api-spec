@@ -8,6 +8,7 @@ build: \
 	pub/version.txt \
 	pub/openapi.yaml \
 	pub/openapi.json \
+	pub/index.html \
 
 clean:
 	rm -rf pub
@@ -23,6 +24,10 @@ pub/openapi.yaml: src/openapi.yaml
 pub/openapi.json: pub/openapi.yaml
 	@mkdir --parents $(@D)
 	npx js-yaml $< > $@
+
+pub/index.html: pub/openapi.yaml
+	@mkdir --parents $(@D)
+	npx redoc-cli bundle $< --output $@
 
 .PHONY: \
 	clean \
