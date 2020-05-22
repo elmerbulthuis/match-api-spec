@@ -156,7 +156,8 @@ paths:
             Retrieved all matches
           content:
             application/json:
-              schema: {}
+              schema:
+                type: object
               example:
                 {
                   "match":
@@ -203,7 +204,8 @@ paths:
             Retrieved logs for a match
           content:
             application/json:
-              schema: {}
+              schema:
+                type: object
               example:
                 {
                   "3":
@@ -249,7 +251,8 @@ paths:
             Retrieved statistics for a match
           content:
             application/json:
-              schema: {}
+              schema:
+                type: object
               example:
                 {
                   "statistic":
@@ -360,7 +363,3 @@ components:
 
 externalDocs:
   url: https://docs.gameye.com
-
-x-explorer-enabled: false
-x-proxy-enabled: false
-x-samples-enabled: true
