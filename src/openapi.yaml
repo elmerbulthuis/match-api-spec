@@ -311,7 +311,7 @@ paths:
           description: |
             Match was not found
 
-  /query/artifacts:
+  /artifacts:
     get:
       operationId: artifacts
       summary: "Get match artifacts"
@@ -348,7 +348,7 @@ paths:
           description: |
             Downloading artifact in the .tar format
           content:
-            application/octet-stream: {}
+            application/x-tar: {}
         "401":
           description: |
             You are not authorized
