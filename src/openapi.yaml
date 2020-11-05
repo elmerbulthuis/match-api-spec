@@ -51,7 +51,6 @@ paths:
                 - locationKeys
                 - templateKey
                 - config
-                - restart
               properties:
                 matchKey:
                   type: string
@@ -95,7 +94,6 @@ paths:
                 restart:
                   type: boolean
                   description: "A flag that indicates whether the match should always restart or not. This is an optional field and will yield 'false' if not provided."
-                  required: false
             example:
               {
                 "matchKey": "my-awesome-match",
