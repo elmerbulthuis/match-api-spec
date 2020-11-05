@@ -91,6 +91,9 @@ paths:
                   minLength: 1
                   description: "URL to call when the match has ended, optional"
                   example: "https://yourbackend/matchid"
+                restart:
+                  type: boolean
+                  description: "A flag that indicates whether the match should always restart or not. This is an optional field and will yield 'false' if not provided."
             example:
               {
                 "matchKey": "my-awesome-match",
@@ -99,6 +102,7 @@ paths:
                 "templateKey": "deathmatch",
                 "config": { "map": "de_dust" },
                 "endCallbackUrl": "https://mybackend/matchid",
+                "restart": true
               }
       responses:
         "200":
