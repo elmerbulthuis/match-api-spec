@@ -94,6 +94,13 @@ paths:
                 restart:
                   type: boolean
                   description: "A flag that indicates whether the match should always restart or not. This is an optional field and will yield 'false' if not provided."
+                sortAdvantages:
+                  type: array
+                  description: "A list of advantages to sort on whilst searching for an appropriate machine to run the match on."
+                  items: { 
+                    type: string
+                  }
+                  default: ["price"]
             example:
               {
                 "matchKey": "my-awesome-match",
@@ -102,7 +109,8 @@ paths:
                 "templateKey": "deathmatch",
                 "config": { "map": "de_dust" },
                 "endCallbackUrl": "https://mybackend/matchid",
-                "restart": true
+                "restart": true,
+                "sortAdvantages": ["price"]
               }
       responses:
         "200":
