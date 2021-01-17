@@ -1,6 +1,6 @@
 SHELL:=$(PREFIX)/bin/sh
 TAG?=$(shell git describe --tags)
-VERSION:=$(shell npx semver $(TAG))
+VERSION:=$(shell npx --yes semver $(TAG))
 PACKAGE_NAME:=match-api-spec
 
 rebuild: clean build
@@ -29,7 +29,7 @@ out/static/openapi.json: out/static/openapi.yaml
 
 out/static/index.html: out/static/openapi.yaml
 	@mkdir --parents $(@D)
-	npx --yes redoc-cli bundle $< --output $@
+	npx --yes redoc-cli@0.10.2 bundle $< --output $@
 
 out/npm/: out/static/openapi.yaml
 	npx --yes oas3ts-generator@0.8.3 package \

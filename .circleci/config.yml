@@ -2,7 +2,7 @@ version: 2.1
 
 jobs:
   build:
-    docker: [image: circleci/node:12]
+    docker: [image: circleci/node:15]
     steps:
       - checkout
       - run: make TAG=$CIRCLE_TAG
@@ -11,7 +11,7 @@ jobs:
           paths: [out]
 
   test:
-    docker: [image: circleci/node:12]
+    docker: [image: circleci/node:15]
     steps:
       - checkout
       - run: ./test
@@ -58,7 +58,7 @@ jobs:
           }'
 
   publish-npm:
-    docker: [image: circleci/node:12]
+    docker: [image: circleci/node:15]
     steps:
       - attach_workspace: { at: . }
       - run: echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" >> ~/.npmrc
