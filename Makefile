@@ -38,6 +38,7 @@ out/npm/: out/static/openapi.yaml
 		--request-type application/json \
 		--response-type text/plain \
 		--response-type application/json \
+		--response-type application/x-tar \
 		$<
 	( cd $@ ; npm install )
 
