@@ -273,6 +273,7 @@ paths:
 
   /query/statistic:
     get:
+      deprecated: true
       operationId: statistic
       summary: "Get match statistics"
       description: |
