@@ -27,6 +27,7 @@ paths:
   /heartbeat:
     get:
       operationId: heartbeat
+      security: []
       responses:
         "204":
           description: |
