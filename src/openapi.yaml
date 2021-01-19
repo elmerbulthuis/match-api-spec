@@ -24,10 +24,135 @@ security:
   - api-token: []
 
 paths:
+  /heartbeat:
+    get:
+      operationId: heartbeat
+      responses:
+        "204":
+          description: |
+            command successful
+
   /command/start-match:
     post:
       deprecated: true
       operationId: start-match
+      summary: "Create a match"
+      description: |
+        Create a new on-demand game server.
+
+        The `config` object can be used to pass any dynamic parameters directly to the game server executable.
+        Either as a startup parameters, configfile or environment variable. For more info see https://docs.gameye.com/docs/using-the-igniter-tool
+
+        > ### Important
+        > In extreme cases it can take up 50 seconds to start a server, after which we produce a time-out.
+        > Please adjust the time-out settings of your client accordingly.
+
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: false
+              required:
+                - matchKey
+                - gameKey
+                - locationKeys
+                - templateKey
+                - config
+              properties:
+                matchKey:
+                  type: string
+                  minLength: 1
+                  description: |
+                    unique match id
+                  example: "my-awesome-match"
+                gameKey:
+                  type: string
+                  minLength: 1
+                  description: |
+                    game id
+                  example: "csgo"
+                locationKeys:
+                  type: array
+                  items:
+                    type: string
+                    minLength: 1
+                    example: "eu-west"
+                  minItems: 1
+                  description: |
+                    location id
+
+                    for available locations see https://docs.gameye.com/docs/choosing-your-server-locations
+                templateKey:
+                  type: string
+                  minLength: 1
+                  description: |
+                    template id
+                  example: "esl1on1"
+                config:
+                  type: object
+                  additionalProperties: true
+                  description: |
+                    any custom parameters you want to add
+                endCallbackUrl:
+                  type: string
+                  minLength: 1
+                  description: "URL to call when the match has ended, optional"
+                  example: "https://yourbackend/matchid"
+                restart:
+                  type: boolean
+                  description: "A flag that indicates whether the match should always restart or not. This is an optional field and will yield 'false' if not provided."
+                sortAdvantages:
+                  type: array
+                  description: "A list of advantages to sort on whilst searching for an appropriate machine to run the match on."
+                  items: { type: string }
+                  default: ["price"]
+            example:
+              {
+                "matchKey": "my-awesome-match",
+                "gameKey": "shooter-game",
+                "locationKeys": ["eu-west"],
+                "templateKey": "deathmatch",
+                "config": { "map": "de_dust" },
+                "endCallbackUrl": "https://mybackend/matchid",
+                "restart": true,
+                "sortAdvantages": ["price"],
+              }
+      responses:
+        "200":
+          description: |
+            Match was started
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                {
+                  "id": "my-awesome-match",
+                  "image": "shooter-game",
+                  "location": "eu-west",
+                  "host": "127.0.0.1",
+                  "port": { "game": 65424, "query": 53423 },
+                  "created": 1589471457344,
+                }
+        "400":
+          description: |
+            Bad request
+        "401":
+          description: |
+            You are not authorized
+        "409":
+          description: |
+            MatchKey has already been used
+        "503":
+          description: |
+            Location temporary out of capacity
+
+  /action/start-match:
+    post:
+      deprecated: true
+      operationId: start-match-action
       summary: "Create a match"
       description: |
         Create a new on-demand game server.
@@ -179,9 +304,93 @@ paths:
           description: |
             Match has already been stopped
 
+  /action/stop-match:
+    post:
+      operationId: stop-match-action
+      summary: "Stop a match"
+      description: |
+        Force shutdown the game server.
+
+        The game server process inside the container will receive `SIGTERM`.
+
+        > ### Important
+        > 
+        > Depending on the game server it can take up to 20 seconds before the shutdown is completed.
+      deprecated: true
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: false
+              required:
+                - matchKey
+              properties:
+                matchKey: { type: string, minLength: 1 }
+            example: { "matchKey": "my-awesome-match" }
+      responses:
+        "204":
+          description: |
+            Match was stopped
+        "401":
+          description: |
+            You are not authorized
+        "404":
+          description: |
+            Match was not found
+        "409":
+          description: |
+            Match has already been stopped
+
   /query/match:
     get:
       operationId: get-matches
+      summary: "Get all matches"
+      description: |
+        Fetches a list of all active matches.
+
+        Note that this list only displays **active** matches. When the game server process stops, the match is almost instantly removed from the list.
+      responses:
+        "200":
+          description: |
+            Retrieved all matches
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                {
+                  "match":
+                    {
+                      "83433e65-caac-4820-b8e7-875b86dd4994":
+                        {
+                          "matchKey": "83433e65-caac-4820-b8e7-875b86dd4994",
+                          "gameKey": "shooter-game",
+                          "locationKey": "eu-west",
+                          "host": "127.0.0.1",
+                          "created": 1588944190593,
+                          "port": { "game": 63857, "gotv": 57599 },
+                        },
+                      "76ffc16c-6b0b-4d55-bf8d-ae74b6d962ae":
+                        {
+                          "matchKey": "76ffc16c-6b0b-4d55-bf8d-ae74b6d962ae",
+                          "gameKey": "shooter-game",
+                          "locationKey": "us-central",
+                          "host": "192.168.1.1",
+                          "created": 1583164808454,
+                          "port": { "game": 56900, "query": 53912 },
+                        },
+                    },
+                }
+        "401":
+          description: |
+            You are not authorized
+          
+  /fetch/match:
+    get:
+      operationId: get-matches-fetch
+      deprecated: true
       summary: "Get all matches"
       description: |
         Fetches a list of all active matches.
@@ -271,10 +480,139 @@ paths:
           description: |
             Match was not found
 
+  /fetch/log:
+    get:
+      operationId: log-fetch
+      deprecated: true
+      summary: "Get match logs"
+      description: |
+        Fetch the output that the game server writes to standard out (stdout).
+
+        This endpoint can used to provide secure and automated access to debug server related issues.
+
+        > ### Important
+        > Note that the logs can only be fetched after the match is stopped and that the logs are available 
+        > up to **four** hours after the match has entered the stopped state.
+
+      parameters:
+        - name: matchKey
+          in: query
+          required: true
+          schema: { type: string, minLength: 1 }
+      responses:
+        "200":
+          description: |
+            Retrieved logs for a match
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                {
+                  "3":
+                    {
+                      "lineKey": 3,
+                      "payload": "Server will auto-restart if there is a crash.\n",
+                    },
+                  "4":
+                    {
+                      "lineKey": 4,
+                      "payload": "LD_LIBRARY_PATH=/home/steam/csgo/bin:/home/steam/csgo:/home/steam/csgo/bin:\n",
+                    },
+                  "5": { "lineKey": 5, "payload": "#\n" },
+                  "6": { "lineKey": 6, "payload": "#Console initialized.\n" },
+                }
+        "401":
+          description: |
+            You are not authorized
+        "404":
+          description: |
+            Match was not found
+
   /query/statistic:
     get:
       deprecated: true
       operationId: statistic
+      summary: "Get match statistics"
+      description: |
+        Fetch team and player statistics of the match
+
+        > ### Important
+        > 
+        > Statistics are disabled by default, please contact our support department if you would like to expose statistics from your game.
+        > The stats are only availble post-match.
+      parameters:
+        - name: matchKey
+          in: query
+          required: true
+          schema: { type: string, minLength: 1 }
+      responses:
+        "200":
+          description: |
+            Retrieved statistics for a match
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                {
+                  "statistic":
+                    {
+                      "start": 1582898480000,
+                      "stop": 1582899086000,
+                      "startedRounds": 6,
+                      "finishedRounds": 6,
+                      "player":
+                        {
+                          "3":
+                            {
+                              "connected": false,
+                              "playerKey": "3",
+                              "uid": "BOT",
+                              "name": "Brad",
+                              "statistic":
+                                { "assist": 0, "death": 5, "kill": 3 },
+                            },
+                          "5":
+                            {
+                              "connected": false,
+                              "playerKey": "5",
+                              "uid": "BOT",
+                              "name": "Wayne",
+                              "statistic":
+                                { "assist": 1, "death": 3, "kill": 5 },
+                            },
+                        },
+                      "team":
+                        {
+                          "1":
+                            {
+                              "teamKey": "1",
+                              "name": "Counter Terrorists",
+                              "statistic": { "score": 3 },
+                              "player": { "3": true },
+                            },
+                          "2":
+                            {
+                              "teamKey": "2",
+                              "name": "Terrorists",
+                              "statistic": { "score": 3 },
+                              "player": { "5": true },
+                            },
+                        },
+                    },
+                }
+        "401":
+          description: |
+            You are not authorized
+        "404":
+          description: |
+            Match was not found
+
+  /fetch/statistic:
+    get:
+      deprecated: true
+      operationId: statistic-fetch
       summary: "Get match statistics"
       description: |
         Fetch team and player statistics of the match
