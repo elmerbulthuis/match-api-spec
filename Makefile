@@ -1,5 +1,5 @@
 SHELL:=$(PREFIX)/bin/sh
-TAG?=$(shell git describe --tags)
+TAG?=0.0.0-local
 VERSION:=$(shell npx --yes semver $(TAG))
 PACKAGE_NAME:=match-api-spec
 
@@ -25,7 +25,7 @@ out/static/openapi.yaml: src/openapi.yaml
 
 out/static/openapi.json: out/static/openapi.yaml
 	@mkdir --parents $(@D)
-	npx js-yaml $< > $@
+	npx --yes js-yaml $< > $@
 
 out/static/index.html: out/static/openapi.yaml
 	@mkdir --parents $(@D)
@@ -36,8 +36,8 @@ out/npm/: out/static/openapi.yaml
 		--package-dir $@ \
 		--package-name @gameye/$(PACKAGE_NAME) \
 		--request-type application/json \
-		--response-type text/plain \
 		--response-type application/json \
+		--response-type text/plain \
 		--response-type application/x-tar \
 		$<
 	( cd $@ ; npm install )
