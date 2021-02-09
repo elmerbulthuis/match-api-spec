@@ -24,14 +24,29 @@ security:
   - api-token: []
 
 paths:
-  /heartbeat:
+  /readiness:
     get:
-      operationId: heartbeat
+      operationId: readiness
       security: []
       responses:
         "204":
           description: |
-            command successful
+            This is ready to accept new requests
+        "503":
+          description: |
+            Server is not ready!
+
+  /liveness:
+    get:
+      operationId: liveness
+      security: []
+      responses:
+        "204":
+          description: |
+            Server is alive and kicking!
+        "503":
+          description: |
+            This server is dead
 
   /command/start-match:
     post:
