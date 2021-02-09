@@ -1,5 +1,5 @@
 SHELL:=$(PREFIX)/bin/sh
-TAG?=0.0.0-local
+TAG?=$(shell git describe --tags)
 VERSION:=$(shell npx --yes semver $(TAG))
 PACKAGE_NAME:=match-api-spec
 
@@ -25,19 +25,19 @@ out/static/openapi.yaml: src/openapi.yaml
 
 out/static/openapi.json: out/static/openapi.yaml
 	@mkdir --parents $(@D)
-	npx --yes js-yaml $< > $@
+	npx js-yaml $< > $@
 
 out/static/index.html: out/static/openapi.yaml
 	@mkdir --parents $(@D)
 	npx --yes redoc-cli@0.10.2 bundle $< --output $@
 
 out/npm/: out/static/openapi.yaml
-	npx --yes oas3ts-generator@0.9.7 package \
+	npx --yes oas3ts-generator@0.10.0 package \
 		--package-dir $@ \
 		--package-name @gameye/$(PACKAGE_NAME) \
 		--request-type application/json \
-		--response-type application/json \
 		--response-type text/plain \
+		--response-type application/json \
 		--response-type application/x-tar \
 		$<
 	( cd $@ ; npm install )
