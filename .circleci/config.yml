@@ -16,6 +16,47 @@ jobs:
       - checkout
       - run: ./test
 
+  publish-static:
+    docker: [image: circleci/python:3.6]
+    environment:
+      BUCKET: api-spec.gameye.com
+    steps:
+      - run: sudo pip install awscli
+      - attach_workspace: { at: . }
+      - run: >
+          aws s3 cp
+          out/static/index.html
+          s3://$BUCKET/$CIRCLE_TAG/index.html
+          --content-type 'text/html'
+          --cache-control 'max-age=604800'
+      - run: >
+          aws s3 cp
+          out/static/openapi.yaml
+          s3://$BUCKET/$CIRCLE_TAG/openapi.yaml
+          --content-type 'application/vnd.oai.openapi;version=3.0'
+          --cache-control 'max-age=604800'
+      - run: >
+          aws s3 cp
+          out/static/openapi.json
+          s3://$BUCKET/$CIRCLE_TAG/openapi.json
+          --content-type 'application/vnd.oai.openapi+json;version=3.0'
+          --cache-control 'max-age=604800'
+      - run: >
+          aws s3api put-bucket-website
+          --bucket $BUCKET
+          --website-configuration '{
+            "IndexDocument": {"Suffix": "index.html"},
+            "RoutingRules": [
+              {
+                "Condition": {"KeyPrefixEquals": "latest"},
+                "Redirect": {
+                  "HttpRedirectCode": "302",
+                  "ReplaceKeyPrefixWith": "'$CIRCLE_TAG'"
+                }
+              }
+            ]
+          }'
+
   publish-npm:
     docker: [image: circleci/node:15]
     steps:
@@ -32,6 +73,12 @@ workflows:
             tags: { only: /^v\d+\.\d+\.\d+$/ }
       - test:
           filters:
+            tags: { only: /^v\d+\.\d+\.\d+$/ }
+      - publish-static:
+          context: authorized
+          requires: [build]
+          filters:
+            branches: { ignore: /.*/ }
             tags: { only: /^v\d+\.\d+\.\d+$/ }
       - publish-npm:
           context: authorized
