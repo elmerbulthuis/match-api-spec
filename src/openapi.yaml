@@ -284,6 +284,30 @@ paths:
             application/json:
               schema:
                 type: object
+                additionalProperties: false
+                required:
+                  - id
+                  - image
+                  - location
+                  - host
+                  - created
+                  - port
+                properties:
+                  id:
+                    type: string
+                  image:
+                    type: string
+                  location:
+                    type: string
+                  host:
+                    type: string
+                  created:
+                    type: integer
+                  port:
+                    type: object
+                    additionalProperties:
+                      type: integer
+
               example:
                 {
                   "id": "my-awesome-match",
