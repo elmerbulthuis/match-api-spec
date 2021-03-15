@@ -423,6 +423,29 @@ paths:
             application/json:
               schema:
                 type: object
+                required:
+                  - match
+                properties:
+                  match:
+                    type: object
+                    additionalProperties: false
+                    required:
+                      - matchKey
+                      - gameKey
+                      - locationKey
+                      - host
+                      - created
+                      - port
+                    properties:
+                      matchKey: { type: string }
+                      gameKey: { type: string }
+                      locationKey: { type: string }
+                      host: { type: string }
+                      created: { type: string }
+                      port:
+                        type: object
+                        additionalProperties: { type: number }
+
               example:
                 {
                   "match":
@@ -450,7 +473,7 @@ paths:
         "401":
           description: |
             You are not authorized
-          
+
   /fetch/match:
     get:
       operationId: get-matches-fetch
