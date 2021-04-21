@@ -423,28 +423,30 @@ paths:
             application/json:
               schema:
                 type: object
+                additionalProperties: false
                 required:
                   - match
                 properties:
                   match:
                     type: object
-                    additionalProperties: false
-                    required:
-                      - matchKey
-                      - gameKey
-                      - locationKey
-                      - host
-                      - created
-                      - port
-                    properties:
-                      matchKey: { type: string }
-                      gameKey: { type: string }
-                      locationKey: { type: string }
-                      host: { type: string }
-                      created: { type: string }
-                      port:
-                        type: object
-                        additionalProperties: { type: number }
+                    additionalProperties:
+                      type: object
+                      required:
+                        - matchKey
+                        - gameKey
+                        - locationKey
+                        - host
+                        - created
+                        - port
+                      properties:
+                        matchKey: { type: string }
+                        gameKey: { type: string }
+                        locationKey: { type: string }
+                        host: { type: string }
+                        created: { type: string }
+                        port:
+                          type: object
+                          additionalProperties: { type: number }
 
               example:
                 {
