@@ -719,7 +719,7 @@ paths:
                         container: { type: integer, minimum: 1, maximum: 65535 }
                         host: { type: integer, minimum: 32768, maximum: 65535 }
 
-        "529":
+        "420":
           description: |
             This session can currently not be started in the provided location. This could also be the result of starting too many sessions in a short period of time. Please try again later!
 
