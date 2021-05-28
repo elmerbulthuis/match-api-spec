@@ -443,7 +443,7 @@ paths:
                         gameKey: { type: string }
                         locationKey: { type: string }
                         host: { type: string }
-                        created: { type: string }
+                        created: { type: number }
                         port:
                           type: object
                           additionalProperties: { type: number }
