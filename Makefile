@@ -1,9 +1,7 @@
+PACKAGE_NAME?=
+TAG?=v0.0.0-local
 SHELL:=$(PREFIX)/bin/sh
-TAG?=$(shell git describe --tags)
-VERSION:=$(shell npx --yes semver $(TAG))
-PACKAGE_NAME:=match-api-spec
-
-rebuild: clean build
+VERSION:=$(shell `npm bin`/semver $(TAG))
 
 build: \
 	out/static/version.txt \
@@ -12,7 +10,10 @@ build: \
 	out/static/index.html \
 	out/npm/ \
 
+rebuild: clean build
+
 clean:
+	rm -rf bin
 	rm -rf out
 
 out/static/version.txt:
@@ -25,24 +26,24 @@ out/static/openapi.yaml: src/openapi.yaml
 
 out/static/openapi.json: out/static/openapi.yaml
 	@mkdir --parents $(@D)
-	npx js-yaml $< > $@
+	`npm bin`/js-yaml $< > $@
 
 out/static/index.html: out/static/openapi.yaml
 	@mkdir --parents $(@D)
-	npx --yes redoc-cli@0.10.2 bundle $< --output $@
+	`npm bin`/redoc-cli bundle $< --output $@
 
 out/npm/: out/static/openapi.yaml
-	npx --yes oas3ts-generator@1.1.3 package \
+	`npm bin`/oas3ts-generator package \
 		--package-dir $@ \
-		--package-name @gameye/$(PACKAGE_NAME) \
+		--package-name $(PACKAGE_NAME) \
 		--request-type application/json \
-		--response-type text/plain \
 		--response-type application/json \
-		--response-type application/x-tar \
+		--response-type text/plain \
 		$<
-	( cd $@ ; npm install )
+	( cd $@ ; npm install --unsafe-perm )
+
 
 .PHONY: \
-	clean \
 	build \
 	rebuild \
+	clean \
