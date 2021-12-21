@@ -12,7 +12,10 @@
                 "<node_internals>/**"
             ],
             "runtimeExecutable": "npx",
-            "program": "redoc-cli",
+            "runtimeArgs": [
+                "--yes"
+            ],
+            "program": "redoc-cli@0.10.2",
             "args": [
                 "serve",
                 "${workspaceFolder}/src/openapi.yaml",
