@@ -594,24 +594,18 @@ paths:
           description: |
             Match was not found
 
-  /logs/{streamType}:
+  /logs:
     get:
-      operationId: stream-logs
+      operationId: stream-std-logs
       summary: "Get real-time logs"
       description: |
-        Fetch the output that the game server writes to standard out (stdout). Unlike /fetch/log,
-        this endpoint opens up a stream that can be invoked-and kept open until the underlying
-        container of the game server has been terminated.
+        Fetch the output that the game server writes to standard out-and standard err. Unlike 
+        /fetch/log, this endpoint opens up a stream that can be invoked-and kept open until the
+        underlying container of the game server has been terminated.
 
         This endpoint can used to provide secure and automated access to debug server related issues.
 
       parameters:
-        - name: streamType
-          in: path
-          description: The type of stream to open.
-          schema:
-            type: string
-            enum: [stdout, stderr]
         - name: matchKey
           in: query
           required: true
@@ -624,21 +618,68 @@ paths:
             application/json:
               schema:
                 type: object
-              example:
-                {
-                  "3":
-                    {
-                      "lineKey": 3,
-                      "payload": "Server will auto-restart if there is a crash.\n",
-                    },
-                  "4":
-                    {
-                      "lineKey": 4,
-                      "payload": "LD_LIBRARY_PATH=/home/steam/csgo/bin:/home/steam/csgo:/home/steam/csgo/bin:\n",
-                    },
-                  "5": { "lineKey": 5, "payload": "#\n" },
-                  "6": { "lineKey": 6, "payload": "#Console initialized.\n" },
-                }
+        "401":
+          description: |
+            You are not authorized
+        "404":
+          description: |
+            Match was not found
+
+  /logs/stdout:
+    get:
+      operationId: stream-stdout-logs
+      summary: "Get real-time stdout logs"
+      description: |
+        Fetch the output that the game server writes to standard out. Unlike /fetch/log, this 
+        endpoint opens up a stream that can be invoked-and kept open until the underlying container
+        of the game server has been terminated.
+
+        This endpoint can used to provide secure and automated access to debug server related issues.
+
+      parameters:
+        - name: matchKey
+          in: query
+          required: true
+          schema: { type: string, minLength: 1 }
+      responses:
+        "200":
+          description: |
+            Retrieved logs for a match
+          content:
+            application/json:
+              schema:
+                type: object
+        "401":
+          description: |
+            You are not authorized
+        "404":
+          description: |
+            Match was not found
+
+  /logs/stderr:
+    get:
+      operationId: stream-stderr-logs
+      summary: "Get real-time stderr logs"
+      description: |
+        Fetch the output that the game server writes to standard err. Unlike /fetch/log, this 
+        endpoint opens up a stream that can be invoked-and kept open until the underlying container
+        of the game server has been terminated.
+
+        This endpoint can used to provide secure and automated access to debug server related issues.
+
+      parameters:
+        - name: matchKey
+          in: query
+          required: true
+          schema: { type: string, minLength: 1 }
+      responses:
+        "200":
+          description: |
+            Retrieved logs for a match
+          content:
+            application/json:
+              schema:
+                type: object
         "401":
           description: |
             You are not authorized
