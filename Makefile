@@ -40,6 +40,7 @@ out/npm/: out/static/openapi.yaml
 		--response-type application/json \
 		--response-type application/x-ndjson \
 		--response-type text/plain \
+		--response-type application/x-tar \
 		--response-type application/octet-stream \
 		$<
 	( cd $@ ; npm install --unsafe-perm )
