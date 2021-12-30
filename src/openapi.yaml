@@ -613,17 +613,26 @@ paths:
       responses:
         "200":
           description: |
-            Retrieved logs for a match
+            A stream of logs has been opened that will continue to stream any
+            logs from the underlying container until the container has been 
+            terminated.
           content:
             application/json:
               schema:
                 type: object
+                additionalProperties: false
+                required:
+                  - payload
+                properties:
+                  payload:
+                    type: string
+                    minLength: 1
         "401":
           description: |
-            You are not authorized
+            You are not authorized.
         "404":
           description: |
-            Match was not found
+            Could not find the associated session.
 
   /logs/stdout:
     get:
@@ -644,17 +653,26 @@ paths:
       responses:
         "200":
           description: |
-            Retrieved logs for a match
+            A stream of logs has been opened that will continue to stream any
+            logs from the underlying container until the container has been 
+            terminated.
           content:
             application/json:
               schema:
                 type: object
+                additionalProperties: false
+                required:
+                  - payload
+                properties:
+                  payload:
+                    type: string
+                    minLength: 1
         "401":
           description: |
-            You are not authorized
+            You are not authorized.
         "404":
           description: |
-            Match was not found
+            Could not find the associated session.
 
   /logs/stderr:
     get:
@@ -675,17 +693,26 @@ paths:
       responses:
         "200":
           description: |
-            Retrieved logs for a match
+            A stream of logs has been opened that will continue to stream any
+            logs from the underlying container until the container has been 
+            terminated.
           content:
             application/json:
               schema:
                 type: object
+                additionalProperties: false
+                required:
+                  - payload
+                properties:
+                  payload:
+                    type: string
+                    minLength: 1
         "401":
           description: |
-            You are not authorized
+            You are not authorized.
         "404":
           description: |
-            Match was not found
+            Could not find the associated session.
 
   /artifacts:
     get:
