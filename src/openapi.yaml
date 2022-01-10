@@ -617,16 +617,8 @@ paths:
             logs from the underlying container until the container has been 
             terminated.
           content:
-            application/json:
-              schema:
-                type: object
-                additionalProperties: false
-                required:
-                  - payload
-                properties:
-                  payload:
-                    type: string
-                    minLength: 1
+            "text/plain": {}
+
         "401":
           description: |
             You are not authorized.
@@ -657,16 +649,8 @@ paths:
             logs from the underlying container until the container has been 
             terminated.
           content:
-            application/json:
-              schema:
-                type: object
-                additionalProperties: false
-                required:
-                  - payload
-                properties:
-                  payload:
-                    type: string
-                    minLength: 1
+            "text/plain": {}
+
         "401":
           description: |
             You are not authorized.
@@ -697,16 +681,7 @@ paths:
             logs from the underlying container until the container has been 
             terminated.
           content:
-            application/json:
-              schema:
-                type: object
-                additionalProperties: false
-                required:
-                  - payload
-                properties:
-                  payload:
-                    type: string
-                    minLength: 1
+            "text/plain": {}
         "401":
           description: |
             You are not authorized.
