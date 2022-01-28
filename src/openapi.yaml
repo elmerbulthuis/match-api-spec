@@ -601,15 +601,24 @@ paths:
       description: |
         Fetch the output that the game server writes to standard out-and standard err. Unlike 
         /fetch/log, this endpoint opens up a stream that can be invoked-and kept open until the
-        underlying container of the game server has been terminated.
+        underlying container of the game server has been terminated. It can therefore be used
+        to provide secure and automated access to debug server related issues.
 
-        This endpoint can used to provide secure and automated access to debug server related issues.
+        There are two content types available:
+          - text/plain
+          - application/json
+
+        The text/plain can be used for regular purposes e.g debugging your containerized application.
+        The application/json content type on the other hand, is used for advanced use cases where it
+        is necessary to distinguish between the different stream types.
 
       parameters:
         - name: matchKey
           in: query
           required: true
-          schema: { type: string, minLength: 1 }
+          schema:
+            type: string
+            minLength: 1
       responses:
         "200":
           description: |
@@ -617,71 +626,21 @@ paths:
             logs from the underlying container until the container has been 
             terminated.
           content:
+            "application/json":
+              schema:
+                type: object
+                additionalProperties: false
+                required:
+                  - streamType
+                  - line
+                properties:
+                  streamType:
+                    type: number
+                  line:
+                    type: string
+                    minLength: 0
             "text/plain": {}
 
-        "401":
-          description: |
-            You are not authorized.
-        "404":
-          description: |
-            Could not find the associated session.
-
-  /logs/stdout:
-    get:
-      operationId: stream-stdout-logs
-      summary: "Get real-time stdout logs"
-      description: |
-        Fetch the output that the game server writes to standard out. Unlike /fetch/log, this 
-        endpoint opens up a stream that can be invoked-and kept open until the underlying container
-        of the game server has been terminated.
-
-        This endpoint can used to provide secure and automated access to debug server related issues.
-
-      parameters:
-        - name: matchKey
-          in: query
-          required: true
-          schema: { type: string, minLength: 1 }
-      responses:
-        "200":
-          description: |
-            A stream of logs has been opened that will continue to stream any
-            logs from the underlying container until the container has been 
-            terminated.
-          content:
-            "text/plain": {}
-
-        "401":
-          description: |
-            You are not authorized.
-        "404":
-          description: |
-            Could not find the associated session.
-
-  /logs/stderr:
-    get:
-      operationId: stream-stderr-logs
-      summary: "Get real-time stderr logs"
-      description: |
-        Fetch the output that the game server writes to standard err. Unlike /fetch/log, this 
-        endpoint opens up a stream that can be invoked-and kept open until the underlying container
-        of the game server has been terminated.
-
-        This endpoint can used to provide secure and automated access to debug server related issues.
-
-      parameters:
-        - name: matchKey
-          in: query
-          required: true
-          schema: { type: string, minLength: 1 }
-      responses:
-        "200":
-          description: |
-            A stream of logs has been opened that will continue to stream any
-            logs from the underlying container until the container has been 
-            terminated.
-          content:
-            "text/plain": {}
         "401":
           description: |
             You are not authorized.
