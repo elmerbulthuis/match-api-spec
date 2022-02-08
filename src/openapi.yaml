@@ -423,6 +423,13 @@ paths:
                         port:
                           type: object
                           additionalProperties: { type: number }
+                        labels:
+                          type: object
+                          additionalProperties:
+                            type: string
+                          description: |
+                            The collection of user-defined key/value metadata stored inside the 
+                            configuration of the match.
 
               example:
                 {
@@ -436,6 +443,7 @@ paths:
                           "host": "127.0.0.1",
                           "created": 1588944190593,
                           "port": { "game": 63857, "gotv": 57599 },
+                          "labels": { "my-example-label": "123" },
                         },
                       "76ffc16c-6b0b-4d55-bf8d-ae74b6d962ae":
                         {
@@ -445,6 +453,7 @@ paths:
                           "host": "192.168.1.1",
                           "created": 1583164808454,
                           "port": { "game": 56900, "query": 53912 },
+                          "labels": { "my-example-label": "123" },
                         },
                     },
                 }
@@ -722,6 +731,13 @@ paths:
                   type: array
                   items: { type: string, minLength: 1 }
                 restart: { type: boolean }
+                labels:
+                  type: object
+                  additionalProperties:
+                    type: string
+                  description: |
+                    The collection of user-defined key/value metadata stored inside the 
+                    configuration of the session.
       responses:
         "201":
           description: |
@@ -753,7 +769,9 @@ paths:
 
         "420":
           description: |
-            This session can currently not be started in the provided location. This could also be the result of starting too many sessions in a short period of time. Please try again later!
+            This session can currently not be started in the provided location. This could also be
+            the result of starting too many sessions in a short period of time. 
+            Please try again later!
 
   /metrics:
     get:
