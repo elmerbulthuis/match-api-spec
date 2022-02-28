@@ -386,6 +386,22 @@ paths:
   /query/match:
     get:
       operationId: get-matches
+      parameters:
+        - name: filter
+          in: query
+          required: false
+          style: form
+          explode: false
+          schema:
+            type: object
+            required:
+              - key
+              - value
+            properties:
+              key:
+                type: string
+              value:
+                type: string
       summary: "Get all matches"
       description: |
         Fetches a list of all active matches.
