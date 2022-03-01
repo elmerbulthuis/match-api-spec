@@ -367,7 +367,9 @@ paths:
               required:
                 - matchKey
               properties:
-                matchKey: { type: string, minLength: 1 }
+                matchKey:
+                  type: string
+                  minLength: 1
             example: { "matchKey": "my-awesome-match" }
       responses:
         "204":
@@ -424,14 +426,20 @@ paths:
                         - created
                         - port
                       properties:
-                        matchKey: { type: string }
-                        gameKey: { type: string }
-                        locationKey: { type: string }
-                        host: { type: string }
-                        created: { type: number }
+                        matchKey:
+                          type: string
+                        gameKey:
+                          type: string
+                        locationKey:
+                          type: string
+                        host:
+                          type: string
+                        created:
+                          type: number
                         port:
                           type: object
-                          additionalProperties: { type: number }
+                          additionalProperties:
+                            type: number
                         labels:
                           type: object
                           additionalProperties:
@@ -466,9 +474,9 @@ paths:
                         },
                     },
                 }
-        "401":
+        401:
           description: |
-            You are not authorized
+            You are not authorized to fetch matches.
 
   /fetch/match:
     get:
@@ -478,11 +486,12 @@ paths:
       description: |
         Fetches a list of all active matches.
 
-        Note that this list only displays **active** matches. When the game server process stops, the match is almost instantly removed from the list.
+        Note that this list only displays **active** matches. When the game server process stops, 
+        the match is almost instantly removed from the list.
       responses:
-        "200":
+        200:
           description: |
-            Retrieved all matches
+            A list of active matches started by this user have been fetched.
           content:
             application/json:
               schema:
@@ -511,9 +520,9 @@ paths:
                         },
                     },
                 }
-        "401":
+        401:
           description: |
-            You are not authorized
+            You are not authorized to fetch a match.
 
   /query/log:
     get:
@@ -532,11 +541,13 @@ paths:
         - name: matchKey
           in: query
           required: true
-          schema: { type: string, minLength: 1 }
+          schema:
+            type: string
+            minLength: 1
       responses:
-        "200":
+        200:
           description: |
-            Retrieved logs for a match
+            Logs of the specified match have been retrieved,
           content:
             application/json:
               schema:
@@ -556,10 +567,10 @@ paths:
                   "5": { "lineKey": 5, "payload": "#\n" },
                   "6": { "lineKey": 6, "payload": "#Console initialized.\n" },
                 }
-        "401":
+        401:
           description: |
-            You are not authorized
-        "404":
+            You are not authorized to fetch logs.
+        404:
           description: |
             Match was not found
 
@@ -581,11 +592,13 @@ paths:
         - name: matchKey
           in: query
           required: true
-          schema: { type: string, minLength: 1 }
+          schema:
+            type: string
+            minLength: 1
       responses:
         "200":
           description: |
-            Retrieved logs for a match
+            Logs of the specified match have been retrieved.
           content:
             application/json:
               schema:
@@ -605,12 +618,13 @@ paths:
                   "5": { "lineKey": 5, "payload": "#\n" },
                   "6": { "lineKey": 6, "payload": "#Console initialized.\n" },
                 }
-        "401":
+        401:
           description: |
-            You are not authorized
-        "404":
+            You are not authorized to fetch logs.
+
+        404:
           description: |
-            Match was not found
+            Could not find the specified match.
 
   /logs:
     get:
@@ -691,25 +705,31 @@ paths:
           required: true
           description: |
             Match ID
-          schema: { type: string, minLength: 1 }
+          schema:
+            type: string
+            minLength: 1
         - name: path
           in: query
           required: true
           description: |
             local container path to the file or folder you want to download
-          schema: { type: string, minLength: 1 }
+          schema:
+            type: string
+            minLength: 1
       responses:
-        "200":
+        200:
           description: |
-            Downloading artifact in the .tar format
+            A download of the artifact in .tar format has been initiated.
           content:
             application/x-tar: {}
-        "401":
+
+        401:
           description: |
-            You are not authorized
-        "404":
+            You are not authorized to fetch an artifact.
+
+        404:
           description: |
-            Match was not found
+            Could not find a match with the given match key.
 
   /session:
     post:
@@ -730,16 +750,27 @@ paths:
                 - args
                 - restart
               properties:
-                id: { type: string, minLength: 1 }
-                location: { type: string, minLength: 1 }
-                image: { type: string, minLength: 1 }
+                id:
+                  type: string
+                  minLength: 1
+                location:
+                  type: string
+                  minLength: 1
+                image:
+                  type: string
+                  minLength: 1
                 env:
                   type: object
-                  additionalProperties: { type: string, minLength: 1 }
+                  additionalProperties:
+                    type: string
+                    minLength: 1
                 args:
                   type: array
-                  items: { type: string, minLength: 1 }
-                restart: { type: boolean }
+                  items:
+                    type: string
+                    minLength: 1
+                restart:
+                  type: boolean
                 labels:
                   type: object
                   additionalProperties:
@@ -748,7 +779,7 @@ paths:
                     The collection of user-defined key/value metadata stored inside the 
                     configuration of the session.
       responses:
-        "201":
+        201:
           description: |
             The session is started!
           content:
@@ -772,15 +803,36 @@ paths:
                         - container
                         - host
                       properties:
-                        type: { type: string, enum: [tcp, udp] }
-                        container: { type: integer, minimum: 1, maximum: 65535 }
-                        host: { type: integer, minimum: 32768, maximum: 65535 }
+                        type:
+                          type: string
+                          enum: [tcp, udp]
+                        container:
+                          type: integer
+                          minimum: 1
+                          maximum: 65535
+                        host:
+                          type: integer
+                          minimum: 32768
+                          maximum: 65535
 
-        "420":
+        401:
+          description: |
+            You are not authorized to start a session.
+
+        409:
+          description: |
+            Cannot start a session with the provided id. Please use a unique identifier
+            for your session. It is recommended to use a UUID.
+
+        420:
           description: |
             This session can currently not be started in the provided location. This could also be
             the result of starting too many sessions in a short period of time. 
             Please try again later!
+
+        422:
+          description: |
+            Bad request.
 
   /metrics:
     get:
