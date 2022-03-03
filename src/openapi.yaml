@@ -819,6 +819,11 @@ paths:
           description: |
             You are not authorized to start a session.
 
+        404:
+          description: |
+            The request contains data such as a location, image or organization that
+            does not exist.
+
         409:
           description: |
             Cannot start a session with the provided id. Please use a unique identifier
