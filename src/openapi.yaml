@@ -210,7 +210,7 @@ paths:
         sessions that are active. Those that have already been stopped, will not be included.
 
       responses:
-        "200":
+        200:
           description: |
             Successfully looked up all of the active sessions that are tied to your API token.
           content:
