@@ -299,35 +299,36 @@ paths:
             You are not authorized to fetch a list of active sessions. Please make sure that the 
             included bearer token is correct.
 
+  /session/{id}:
     delete:
       operationId: session-stop
       description: |
-        The game server process inside the container will receive `SIGTERM`.
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              additionalProperties: false
-              required:
-                - id
-              properties:
-                id: { type: string, minLength: 1 }
-            example: { "id": "c595bc6f-8522-4a62-95cd-8742136643ea" }
+        Stops an active session from running by killing the underlying container. The container
+        is killed by sending in a SIGTERM signal. This process may take a few seconds to complete.
+
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The id of the session.
+
       responses:
         204:
           description: |
-            Match was stopped
+            The session has successfully been terminated.
+
         401:
           description: |
-            You are not authorized
+            You are not authorized to stop a session. Please make sure that the 
+            included bearer token is correct.
+
         404:
           description: |
-            Match was not found
+            The specified session does not exist. Please provide a correct session id.
+
         409:
           description: |
-            Match has already been stopped
+            This session has already been terminated.
 
   /query/log:
     get:
