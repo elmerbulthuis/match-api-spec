@@ -190,9 +190,8 @@ paths:
           description: |
             Bad request. This may imply that the given request has invalid syntax.
 
-  /query/match:
     get:
-      operationId: get-matches
+      operationId: session-list
       parameters:
         - name: filter
           in: query
@@ -202,49 +201,63 @@ paths:
             type: object
             additionalProperties:
               type: string
-      summary: "Get all matches"
       description: |
-        Fetches a list of all active matches.
+        Lists all of the active sessions that are tied to your API token. Note that it only returns
+        sessions that are active. Those that have already been stopped, will not be included.
 
-        Note that this list only displays **active** matches. When the game server process stops, the match is almost instantly removed from the list.
       responses:
         "200":
           description: |
-            Retrieved all matches
+            Successfully looked up all of the active sessions that are tied to your API token.
           content:
             application/json:
               schema:
                 type: object
                 additionalProperties: false
                 required:
-                  - match
+                  - sessions
                 properties:
-                  match:
-                    type: object
-                    additionalProperties:
+                  sessions:
+                    type: array
+                    items:
                       type: object
                       required:
-                        - matchKey
-                        - gameKey
-                        - locationKey
+                        - id
+                        - image
+                        - location
                         - host
                         - created
                         - port
                       properties:
-                        matchKey:
+                        id:
                           type: string
-                        gameKey:
+                          description: |
+                            The unique identifier of the session.
+                        image:
                           type: string
-                        locationKey:
+                          description: |
+                            The name of the image of the game that is hosted inside the container.
+                        location:
                           type: string
+                          description: |
+                            The location or region that the game session is hosted in.
                         host:
                           type: string
+                          description: |
+                            The IP address of the host machine the game session is hosted on.
+                          example: "a.b.c.d"
                         created:
                           type: number
+                          description: |
+                            The unix timestamp the session was created in.
+                          example: 1648472895000
                         port:
                           type: object
+                          description: |
+                            The list of exposed ports for this container.
                           additionalProperties:
                             type: number
+                          example: { "port": { "80/tcp": 49160 } }
                         labels:
                           type: object
                           additionalProperties:
@@ -252,49 +265,44 @@ paths:
                           description: |
                             The collection of user-defined key/value metadata stored inside the 
                             configuration of the match.
+                          example:
+                            {
+                              "labels":
+                                {
+                                  "env": '{"GAMEYE_SESSION_ID":"c595bc6f-8522-4a62-95cd-8742136643ea","GAMEYE_HOST":"a.b.c.d"}',
+                                  "tags": '{"my-example-tag":"1","another-example-tag":"3"}',
+                                },
+                            }
 
               example:
                 {
-                  "match":
-                    {
-                      "83433e65-caac-4820-b8e7-875b86dd4994":
-                        {
-                          "matchKey": "83433e65-caac-4820-b8e7-875b86dd4994",
-                          "gameKey": "shooter-game",
-                          "locationKey": "eu-west",
-                          "host": "127.0.0.1",
-                          "created": 1588944190593,
-                          "port": { "game": 63857, "gotv": 57599 },
-                          "labels": { "my-example-label": "123" },
-                        },
-                      "76ffc16c-6b0b-4d55-bf8d-ae74b6d962ae":
-                        {
-                          "matchKey": "76ffc16c-6b0b-4d55-bf8d-ae74b6d962ae",
-                          "gameKey": "shooter-game",
-                          "locationKey": "us-central",
-                          "host": "192.168.1.1",
-                          "created": 1583164808454,
-                          "port": { "game": 56900, "query": 53912 },
-                          "labels": { "my-example-label": "123" },
-                        },
-                    },
+                  "sessions":
+                    [
+                      {
+                        "id": "c595bc6f-8522-4a62-95cd-8742136643ea",
+                        "image": "my-very-special-game",
+                        "location": "frankfurt",
+                        "host": "a.b.c.d",
+                        "created": 1648472895000,
+                        "port": { "80/tcp": 49160 },
+                        "labels":
+                          {
+                            "env": '{"GAMEYE_SESSION_ID":"this-is-my-test-session-103","GAMEYE_HOST":"a.b.c.d"}',
+                            "tags": '{"my-example-tag":"1","another-example-tag":"3"}',
+                          },
+                      },
+                    ],
                 }
+
         401:
           description: |
-            You are not authorized to fetch matches.
+            You are not authorized to fetch a list of active sessions. Please make sure that the 
+            included bearer token is correct.
 
-  /command/stop-match:
-    post:
-      operationId: stop-match
-      summary: "Stop a match"
+    delete:
+      operationId: session-stop
       description: |
-        Force shutdown the game server.
-
         The game server process inside the container will receive `SIGTERM`.
-
-        > ### Important
-        > 
-        > Depending on the game server it can take up to 20 seconds before the shutdown is completed.
       requestBody:
         required: true
         content:
@@ -303,21 +311,21 @@ paths:
               type: object
               additionalProperties: false
               required:
-                - matchKey
+                - id
               properties:
-                matchKey: { type: string, minLength: 1 }
-            example: { "matchKey": "my-awesome-match" }
+                id: { type: string, minLength: 1 }
+            example: { "id": "c595bc6f-8522-4a62-95cd-8742136643ea" }
       responses:
-        "204":
+        204:
           description: |
             Match was stopped
-        "401":
+        401:
           description: |
             You are not authorized
-        "404":
+        404:
           description: |
             Match was not found
-        "409":
+        409:
           description: |
             Match has already been stopped
 
@@ -908,6 +916,139 @@ paths:
         404:
           description: |
             Could not find the specified match.
+
+  /command/stop-match:
+    post:
+      operationId: stop-match
+      deprecated: true
+      summary: "Stop a match"
+      description: |
+        Force shutdown the game server.
+
+        The game server process inside the container will receive `SIGTERM`.
+
+        > ### Important
+        > 
+        > Depending on the game server it can take up to 20 seconds before the shutdown is completed.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: false
+              required:
+                - matchKey
+              properties:
+                matchKey: { type: string, minLength: 1 }
+            example: { "matchKey": "my-awesome-match" }
+      responses:
+        "204":
+          description: |
+            Match was stopped
+        "401":
+          description: |
+            You are not authorized
+        "404":
+          description: |
+            Match was not found
+        "409":
+          description: |
+            Match has already been stopped
+
+  /query/match:
+    get:
+      operationId: get-matches
+      deprecated: true
+      parameters:
+        - name: filter
+          in: query
+          required: false
+          style: deepObject
+          schema:
+            type: object
+            additionalProperties:
+              type: string
+      summary: "Get all matches"
+      description: |
+        Fetches a list of all active matches.
+
+        Note that this list only displays **active** matches. When the game server process stops, the match is almost instantly removed from the list.
+      responses:
+        "200":
+          description: |
+            Retrieved all matches
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: false
+                required:
+                  - match
+                properties:
+                  match:
+                    type: object
+                    additionalProperties:
+                      type: object
+                      required:
+                        - matchKey
+                        - gameKey
+                        - locationKey
+                        - host
+                        - created
+                        - port
+                      properties:
+                        matchKey:
+                          type: string
+                        gameKey:
+                          type: string
+                        locationKey:
+                          type: string
+                        host:
+                          type: string
+                        created:
+                          type: number
+                        port:
+                          type: object
+                          additionalProperties:
+                            type: number
+                        labels:
+                          type: object
+                          additionalProperties:
+                            type: string
+                          description: |
+                            The collection of user-defined key/value metadata stored inside the 
+                            configuration of the match.
+
+              example:
+                {
+                  "match":
+                    {
+                      "83433e65-caac-4820-b8e7-875b86dd4994":
+                        {
+                          "matchKey": "83433e65-caac-4820-b8e7-875b86dd4994",
+                          "gameKey": "shooter-game",
+                          "locationKey": "eu-west",
+                          "host": "127.0.0.1",
+                          "created": 1588944190593,
+                          "port": { "game": 63857, "gotv": 57599 },
+                          "labels": { "my-example-label": "123" },
+                        },
+                      "76ffc16c-6b0b-4d55-bf8d-ae74b6d962ae":
+                        {
+                          "matchKey": "76ffc16c-6b0b-4d55-bf8d-ae74b6d962ae",
+                          "gameKey": "shooter-game",
+                          "locationKey": "us-central",
+                          "host": "192.168.1.1",
+                          "created": 1583164808454,
+                          "port": { "game": 56900, "query": 53912 },
+                          "labels": { "my-example-label": "123" },
+                        },
+                    },
+                }
+        401:
+          description: |
+            You are not authorized to fetch matches.
 
 components:
   securitySchemes:
