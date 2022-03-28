@@ -268,7 +268,7 @@ paths:
                             type: string
                           description: |
                             The collection of user-defined key/value metadata stored inside the 
-                            configuration of the match.
+                            configuration of the session.
                           example:
                             {
                               "labels":
@@ -1023,7 +1023,7 @@ paths:
                             type: string
                           description: |
                             The collection of user-defined key/value metadata stored inside the 
-                            configuration of the match.
+                            configuration of the session.
 
               example:
                 {
