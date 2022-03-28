@@ -199,6 +199,10 @@ paths:
           style: deepObject
           schema:
             type: object
+            description: |
+              A list or record of tags to filter a list of sessions on. If none of the
+              sessions meet the provided filter criteria, naturally an empty list of sessions
+              is returned.
             additionalProperties:
               type: string
       description: |
