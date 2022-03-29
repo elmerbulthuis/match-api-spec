@@ -467,8 +467,7 @@ paths:
 
         401:
           description: |
-            You are not authorized. Please make sure that the 
-            included bearer token is correct.
+            You are not authorized. Please make sure that the included bearer token is correct.
 
         404:
           description: |
@@ -529,8 +528,8 @@ paths:
                 }
         401:
           description: |
-            You are not authorized to fetch logs. Please make sure that the 
-            included bearer token is correct.
+            You are not authorized to fetch logs. Please make sure that the included bearer 
+            token is correct.
 
         404:
           description: |
@@ -604,14 +603,17 @@ paths:
                           type: string
                           description: |
                             The unique identifier of the session.
+                          example: "f7965a22-e327-4541-a30e-8262890d3a29"
                         gameKey:
                           type: string
                           description: |
                             The name of the image of the game that is hosted inside the container.
+                          example: "nginx"
                         locationKey:
                           type: string
                           description: |
                             The location or region that the game session is hosted in.
+                          example: "europe"
                         host:
                           type: string
                           description: |
