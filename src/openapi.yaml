@@ -336,55 +336,59 @@ paths:
           description: |
             This session has already been terminated.
 
-  /query/log:
+  /artifacts:
     get:
-      operationId: log
-      summary: "Get match logs"
+      operationId: artifacts
+      summary: "Download an artifact file from the underlying container."
       description: |
-        Fetch the output that the game server writes to standard out (stdout).
+        Initiates a download of an artifact which could be a file or a folder inside the underlying
+        container. The path should be an absolute Unix path to a specific file or folder.
 
-        This endpoint can used to provide secure and automated access to debug server related issues.
+        The artifact will be provided in the form of a .tar.gz archive that contains your requested
+        file or folder. Please limit your download in size to a maximum of 100mb.
 
-        > ### Important
-        > Note that the logs can only be fetched after the match is stopped and that the logs are available 
-        > up to **four** hours after the match has entered the stopped state.
+        Please note that the artifact is only available for download after the session has been
+        terminated and will be downloaded directly from the container itself.
 
+        Also note that the container will stay on the machine that the session was running on for 
+        at most 8 hours. This means that your artifact may or may not be available post termination.
       parameters:
-        - name: matchKey
+        - name: session
           in: query
           required: true
+          description: |
+            The id of the session to download an artifact from.
           schema:
             type: string
             minLength: 1
+            example: "c595bc6f-8522-4a62-95cd-8742136643ea"
+        - name: path
+          in: query
+          required: true
+          description: |
+            The local path inside the container to the target file or folder requested
+            for download.
+          schema:
+            type: string
+            minLength: 1
+            example: "/home/{user}/{game-folder-name}/crashdump.log"
       responses:
         200:
           description: |
-            Logs of the specified match have been retrieved,
+            A download of the artifact in .tar.gz format has been initiated.
           content:
-            application/json:
-              schema:
-                type: object
-              example:
-                {
-                  "3":
-                    {
-                      "lineKey": 3,
-                      "payload": "Server will auto-restart if there is a crash.\n",
-                    },
-                  "4":
-                    {
-                      "lineKey": 4,
-                      "payload": "LD_LIBRARY_PATH=/home/steam/csgo/bin:/home/steam/csgo:/home/steam/csgo/bin:\n",
-                    },
-                  "5": { "lineKey": 5, "payload": "#\n" },
-                  "6": { "lineKey": 6, "payload": "#Console initialized.\n" },
-                }
+            application/x-tar: {}
+
         401:
           description: |
-            You are not authorized to fetch logs.
+            You are not authorized to fetch an artifact. Please make sure that the 
+            included bearer token is correct.
+
         404:
           description: |
-            Match was not found
+            Could not find a session with the given session id. It is possible that either the
+            session has never existed at all or the container's lifespan on the machine has
+            expired (with regards to the at-most 8 hour window).
 
   /logs:
     get:
@@ -412,7 +416,7 @@ paths:
             type: string
             minLength: 1
       responses:
-        "200":
+        200:
           description: |
             A stream of logs has been opened that will continue to stream any
             logs from the underlying container until the container has been 
@@ -433,63 +437,12 @@ paths:
                     minLength: 0
             "text/plain": {}
 
-        "401":
-          description: |
-            You are not authorized.
-        "404":
-          description: |
-            Could not find the associated session.
-
-  /artifacts:
-    get:
-      operationId: artifacts
-      summary: "Get match artifacts"
-      description: |
-        Start download of an artifact
-
-        ### Providing the path parameter
-        The path should be an absolute Linux path to a specific file or folder.
-
-        Example:
-        /home/{user}/{game-folder-name}/crashdump.log
-
-        ### Downloading the artefact
-        When you fetch the artifact a download of .tar.gz archive will be started that contains your requested file or folder. Please limit your download in size to a maximum of 100mb.
-
-        > ### Important
-        > 
-        > Please note that the artifact is only available for download post-match and will be downloaded directly from the container itself.
-      parameters:
-        - name: session
-          in: query
-          required: true
-          description: |
-            Match ID
-          schema:
-            type: string
-            minLength: 1
-        - name: path
-          in: query
-          required: true
-          description: |
-            local container path to the file or folder you want to download
-          schema:
-            type: string
-            minLength: 1
-      responses:
-        200:
-          description: |
-            A download of the artifact in .tar format has been initiated.
-          content:
-            application/x-tar: {}
-
         401:
           description: |
-            You are not authorized to fetch an artifact.
-
+            You are not authorized.
         404:
           description: |
-            Could not find a match with the given match key.
+            Could not find the associated session.
 
   /metrics:
     get:
@@ -1056,6 +1009,56 @@ paths:
         401:
           description: |
             You are not authorized to fetch matches.
+
+  /query/log:
+    get:
+      operationId: log
+      summary: "Get match logs"
+      description: |
+        Fetch the output that the game server writes to standard out (stdout).
+
+        This endpoint can used to provide secure and automated access to debug server related issues.
+
+        > ### Important
+        > Note that the logs can only be fetched after the match is stopped and that the logs are available 
+        > up to **four** hours after the match has entered the stopped state.
+
+      parameters:
+        - name: matchKey
+          in: query
+          required: true
+          schema:
+            type: string
+            minLength: 1
+      responses:
+        200:
+          description: |
+            Logs of the specified match have been retrieved,
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                {
+                  "3":
+                    {
+                      "lineKey": 3,
+                      "payload": "Server will auto-restart if there is a crash.\n",
+                    },
+                  "4":
+                    {
+                      "lineKey": 4,
+                      "payload": "LD_LIBRARY_PATH=/home/steam/csgo/bin:/home/steam/csgo:/home/steam/csgo/bin:\n",
+                    },
+                  "5": { "lineKey": 5, "payload": "#\n" },
+                  "6": { "lineKey": 6, "payload": "#Console initialized.\n" },
+                }
+        401:
+          description: |
+            You are not authorized to fetch logs.
+        404:
+          description: |
+            Match was not found
 
 components:
   securitySchemes:
