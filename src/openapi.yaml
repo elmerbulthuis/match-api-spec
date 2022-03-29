@@ -411,9 +411,14 @@ paths:
       parameters:
         - name: matchKey
           in: query
+          deprecated: true
           required: true
           schema:
             type: string
+            description: |
+              The id of the session to retrieve logs from the underlying container.
+              Do note that this parameter is deprecated and to be replaced in favour
+              of a new parameter with more consistent naming.
             minLength: 1
       responses:
         200:
@@ -432,14 +437,91 @@ paths:
                 properties:
                   streamType:
                     type: number
+                    description: |
+                      The type of console log stream that the log line originates from. This number
+                      is based off the STREAM_TYPE value from Docker's stream protocol.
+
+                      See: https://docs.docker.com/engine/api/v1.41/#operation/ContainerAttach
+
+                      "STREAM_TYPE can be:
+                        0: stdin (is written on stdout)
+                        1: stdout
+                        2: stderr"
+
+                    example: 1
                   line:
                     type: string
+                    description: "The log line outputted from the underlying stream."
                     minLength: 0
             "text/plain": {}
 
         401:
           description: |
-            You are not authorized.
+            You are not authorized. Please make sure that the 
+            included bearer token is correct.
+
+        404:
+          description: |
+            Could not find the associated session.
+
+  /query/log:
+    get:
+      operationId: log
+      summary: "Retrieves all logs from the container"
+      description: |
+        Retrieves all of the logs of a session from its underlying container. Logs written to both
+        STDOUT and STDERR will be returned. This endpoint can used to provide secure and automated 
+        access to debug server application related issues.
+
+        Please note that the logs are only available for retrieval after the session has been
+        terminated and will be taken directly from the container itself.
+
+        Also note that the container will stay on the machine that the session was running on for 
+        at most 8 hours. This means that your logs may or may not be available post termination.
+
+        Unlike the `/logs` endpoint, this endpoint does NOT continue to stream new logs from the
+        container. Once all logs have been retrieved, the underlying connection is closed.
+
+      parameters:
+        - name: matchKey
+          in: query
+          deprecated: true
+          required: true
+          schema:
+            type: string
+            description: |
+              The id of the session to retrieve logs from the underlying container.
+              Do note that this parameter is deprecated and to be replaced in favour
+              of a new parameter with more consistent naming.
+            minLength: 1
+      responses:
+        200:
+          description: |
+            Logs of the specified session have been retrieved.
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                {
+                  "3":
+                    {
+                      "lineKey": 3,
+                      "payload": "Server will auto-restart if there is a crash.\n",
+                    },
+                  "4":
+                    {
+                      "lineKey": 4,
+                      "payload": "LD_LIBRARY_PATH=/home/steam/csgo/bin:/home/steam/csgo:/home/steam/csgo/bin:\n",
+                    },
+                  "5": { "lineKey": 5, "payload": "#\n" },
+                  "6": { "lineKey": 6, "payload": "#Console initialized.\n" },
+                }
+        401:
+          description: |
+            You are not authorized to fetch logs. Please make sure that the 
+            included bearer token is correct.
+
         404:
           description: |
             Could not find the associated session.
@@ -1009,56 +1091,6 @@ paths:
         401:
           description: |
             You are not authorized to fetch matches.
-
-  /query/log:
-    get:
-      operationId: log
-      summary: "Get match logs"
-      description: |
-        Fetch the output that the game server writes to standard out (stdout).
-
-        This endpoint can used to provide secure and automated access to debug server related issues.
-
-        > ### Important
-        > Note that the logs can only be fetched after the match is stopped and that the logs are available 
-        > up to **four** hours after the match has entered the stopped state.
-
-      parameters:
-        - name: matchKey
-          in: query
-          required: true
-          schema:
-            type: string
-            minLength: 1
-      responses:
-        200:
-          description: |
-            Logs of the specified match have been retrieved,
-          content:
-            application/json:
-              schema:
-                type: object
-              example:
-                {
-                  "3":
-                    {
-                      "lineKey": 3,
-                      "payload": "Server will auto-restart if there is a crash.\n",
-                    },
-                  "4":
-                    {
-                      "lineKey": 4,
-                      "payload": "LD_LIBRARY_PATH=/home/steam/csgo/bin:/home/steam/csgo:/home/steam/csgo/bin:\n",
-                    },
-                  "5": { "lineKey": 5, "payload": "#\n" },
-                  "6": { "lineKey": 6, "payload": "#Console initialized.\n" },
-                }
-        401:
-          description: |
-            You are not authorized to fetch logs.
-        404:
-          description: |
-            Match was not found
 
 components:
   securitySchemes:
