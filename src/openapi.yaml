@@ -543,158 +543,6 @@ paths:
                   A metric as a key-value pair.
                 example: session_count 1
 
-  /command/start-match:
-    post:
-      deprecated: true
-      operationId: start-match
-      summary: Create a new match.
-      description: |
-        Allocate a new game session in a specific region. Each session is to be identified by a
-        unique identifier that is provided by the caller. It is recommended to use a UUID.
-
-        The `config` object can be used to pass any dynamic parameters directly to the game server 
-        executable. Either as a startup parameters, configfile or environment variable. For more 
-        info see https://docs.gameye.com/docs/using-the-igniter-tool
-
-        > ### Important
-        > In extreme cases it can take up 50 seconds to start a server, after which we produce a time-out.
-        > Please adjust the time-out settings of your client accordingly.
-
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              additionalProperties: false
-              required:
-                - matchKey
-                - gameKey
-                - locationKeys
-                - templateKey
-                - config
-              properties:
-                matchKey:
-                  type: string
-                  minLength: 1
-                  description: |
-                    The unique match id (otherwise known as the session id).
-                  example: "my-awesome-match"
-                gameKey:
-                  type: string
-                  minLength: 1
-                  description: |
-                    The image of the application.
-                  example: "csgo"
-                locationKeys:
-                  type: array
-                  items:
-                    type: string
-                    minLength: 1
-                    example: "eu-west"
-                  minItems: 1
-                  description: |
-                    A list of preferred locations to try and host the session at. For available 
-                    locations, see: https://docs.gameye.com/docs/choosing-your-server-locations
-                templateKey:
-                  type: string
-                  minLength: 1
-                  description: |
-                    template id
-                  example: "esl1on1"
-                config:
-                  type: object
-                  additionalProperties: true
-                  description: |
-                    A record of custom configurational parameters to include the application.
-                endCallbackUrl:
-                  type: string
-                  minLength: 1
-                  description: |
-                    The URL to call when the match has ended. This field is optional.
-                  example: "https://yourbackend/matchid"
-                restart:
-                  type: boolean
-                  description: |
-                    A flag that indicates whether the match should always restart or not. 
-                    This is an optional field and will default to 'false' if not provided.
-                sortAdvantages:
-                  type: array
-                  description: |
-                    A list of advantages to sort on whilst searching for an appropriate machine 
-                    to run the match on.
-                  items:
-                    type: string
-                  default: ["price"]
-            example:
-              {
-                "matchKey": "my-awesome-match",
-                "gameKey": "shooter-game",
-                "locationKeys": ["eu-west"],
-                "templateKey": "deathmatch",
-                "config": { "map": "de_dust" },
-                "endCallbackUrl": "https://mybackend/matchid",
-                "restart": true,
-                "sortAdvantages": ["price"],
-              }
-      responses:
-        "200":
-          description: |
-            Match was started
-          content:
-            application/json:
-              schema:
-                type: object
-                additionalProperties: false
-                required:
-                  - id
-                  - image
-                  - location
-                  - host
-                  - created
-                  - port
-                properties:
-                  id:
-                    type: string
-                  image:
-                    type: string
-                  location:
-                    type: string
-                  host:
-                    type: string
-                  created:
-                    type: integer
-                  port:
-                    type: object
-                    additionalProperties:
-                      type: integer
-              example:
-                {
-                  "id": "my-awesome-match",
-                  "image": "shooter-game",
-                  "location": "eu-west",
-                  "host": "127.0.0.1",
-                  "port": { "game": 65424, "query": 53423 },
-                  "created": 1589471457344,
-                }
-        400:
-          description: |
-            Bad request. This may imply that the given request has invalid syntax.
-
-        401:
-          description: |
-            You are not authorized. Please make sure that the included bearer token is correct.
-
-        409:
-          description: |
-            The matchKey has already been used before. Please use a different id. It is
-            recommended to use a universally unique id (UUID).
-
-        503:
-          description: |
-            This location is temporary out of capacity. Please try a different location
-            or wait a few minutes.
-
   /query/match:
     get:
       operationId: get-matches
@@ -718,7 +566,7 @@ paths:
         sessions that are active. Those that have already been stopped, will not be included.
 
         Note that this endpoint has been marked as deprecated and is scheduled for removal. Please
-        use the `/session` endpoint.
+        use the `/session` endpoint with the 'GET' method.
       responses:
         "200":
           description: |
@@ -833,7 +681,7 @@ paths:
         sessions that are active. Those that have already been stopped, will not be included.
 
         Note that this endpoint has been marked as deprecated and is scheduled for removal. Please
-        use the `/session` endpoint.
+        use the `/session` endpoint with the 'GET' method.
       responses:
         200:
           description: |
@@ -875,15 +723,13 @@ paths:
     post:
       operationId: stop-match
       deprecated: true
-      summary: "Stop a match"
+      summary: "Stops a session"
       description: |
-        Force shutdown the game server.
+        Forcefully terminates a session, by sending the underlying container a SIGTERM signal.
+        It may take up to 20 seconds to fully terminate the session.
 
-        The game server process inside the container will receive `SIGTERM`.
-
-        > ### Important
-        > 
-        > Depending on the game server it can take up to 20 seconds before the shutdown is completed.
+        Note that this endpoint has been marked as deprecated and is scheduled for removal. Please
+        use the `/session` endpoint with the 'DELETE' method.
       requestBody:
         required: true
         content:
@@ -894,21 +740,29 @@ paths:
               required:
                 - matchKey
               properties:
-                matchKey: { type: string, minLength: 1 }
+                matchKey:
+                  type: string
+                  description: |
+                    The unique identifier of the session.
+                  minLength: 1
             example: { "matchKey": "my-awesome-match" }
       responses:
-        "204":
+        204:
           description: |
-            Match was stopped
-        "401":
+            The specified session has successfully been terminated.
+
+        401:
           description: |
-            You are not authorized
-        "404":
+            You are not authorized to stop a session. Please make sure that the 
+            included bearer token is correct.
+
+        404:
           description: |
-            Match was not found
-        "409":
+            Could not find a session with the given session id.
+
+        409:
           description: |
-            Match has already been stopped
+            This session has already been terminated.
 
   /fetch/log:
     get:
