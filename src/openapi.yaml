@@ -729,47 +729,6 @@ paths:
           description: |
             You are not authorized to fetch a match.
 
-  /action/stop-match:
-    post:
-      operationId: stop-match-action
-      summary: "Stop a match"
-      description: |
-        Force shutdown the game server.
-
-        The game server process inside the container will receive `SIGTERM`.
-
-        > ### Important
-        > 
-        > Depending on the game server it can take up to 20 seconds before the shutdown is completed.
-      deprecated: true
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              additionalProperties: false
-              required:
-                - matchKey
-              properties:
-                matchKey:
-                  type: string
-                  minLength: 1
-            example: { "matchKey": "my-awesome-match" }
-      responses:
-        "204":
-          description: |
-            Match was stopped
-        "401":
-          description: |
-            You are not authorized
-        "404":
-          description: |
-            Match was not found
-        "409":
-          description: |
-            Match has already been stopped
-
   /fetch/log:
     get:
       operationId: log-fetch
