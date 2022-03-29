@@ -683,143 +683,6 @@ paths:
           description: |
             Location temporary out of capacity
 
-  /fetch/match:
-    get:
-      operationId: get-matches-fetch
-      deprecated: true
-      summary: "Get all matches"
-      description: |
-        Fetches a list of all active matches.
-
-        Note that this list only displays **active** matches. When the game server process stops, 
-        the match is almost instantly removed from the list.
-      responses:
-        200:
-          description: |
-            A list of active matches started by this user have been fetched.
-          content:
-            application/json:
-              schema:
-                type: object
-              example:
-                {
-                  "match":
-                    {
-                      "83433e65-caac-4820-b8e7-875b86dd4994":
-                        {
-                          "matchKey": "83433e65-caac-4820-b8e7-875b86dd4994",
-                          "gameKey": "shooter-game",
-                          "locationKey": "eu-west",
-                          "host": "127.0.0.1",
-                          "created": 1588944190593,
-                          "port": { "game": 63857, "gotv": 57599 },
-                        },
-                      "76ffc16c-6b0b-4d55-bf8d-ae74b6d962ae":
-                        {
-                          "matchKey": "76ffc16c-6b0b-4d55-bf8d-ae74b6d962ae",
-                          "gameKey": "shooter-game",
-                          "locationKey": "us-central",
-                          "host": "192.168.1.1",
-                          "created": 1583164808454,
-                          "port": { "game": 56900, "query": 53912 },
-                        },
-                    },
-                }
-        401:
-          description: |
-            You are not authorized to fetch a match.
-
-  /fetch/log:
-    get:
-      operationId: log-fetch
-      deprecated: true
-      summary: "Get match logs"
-      description: |
-        Fetch the output that the game server writes to standard out (stdout).
-
-        This endpoint can used to provide secure and automated access to debug server related issues.
-
-        > ### Important
-        > Note that the logs can only be fetched after the match is stopped and that the logs are available 
-        > up to **four** hours after the match has entered the stopped state.
-
-      parameters:
-        - name: matchKey
-          in: query
-          required: true
-          schema:
-            type: string
-            minLength: 1
-      responses:
-        "200":
-          description: |
-            Logs of the specified match have been retrieved.
-          content:
-            application/json:
-              schema:
-                type: object
-              example:
-                {
-                  "3":
-                    {
-                      "lineKey": 3,
-                      "payload": "Server will auto-restart if there is a crash.\n",
-                    },
-                  "4":
-                    {
-                      "lineKey": 4,
-                      "payload": "LD_LIBRARY_PATH=/home/steam/csgo/bin:/home/steam/csgo:/home/steam/csgo/bin:\n",
-                    },
-                  "5": { "lineKey": 5, "payload": "#\n" },
-                  "6": { "lineKey": 6, "payload": "#Console initialized.\n" },
-                }
-        401:
-          description: |
-            You are not authorized to fetch logs.
-
-        404:
-          description: |
-            Could not find the specified match.
-
-  /command/stop-match:
-    post:
-      operationId: stop-match
-      deprecated: true
-      summary: "Stop a match"
-      description: |
-        Force shutdown the game server.
-
-        The game server process inside the container will receive `SIGTERM`.
-
-        > ### Important
-        > 
-        > Depending on the game server it can take up to 20 seconds before the shutdown is completed.
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              additionalProperties: false
-              required:
-                - matchKey
-              properties:
-                matchKey: { type: string, minLength: 1 }
-            example: { "matchKey": "my-awesome-match" }
-      responses:
-        "204":
-          description: |
-            Match was stopped
-        "401":
-          description: |
-            You are not authorized
-        "404":
-          description: |
-            Match was not found
-        "409":
-          description: |
-            Match has already been stopped
-
   /query/match:
     get:
       operationId: get-matches
@@ -913,6 +776,143 @@ paths:
         401:
           description: |
             You are not authorized to fetch matches.
+
+  /fetch/match:
+    get:
+      operationId: get-matches-fetch
+      deprecated: true
+      summary: "Get all matches"
+      description: |
+        Fetches a list of all active matches.
+
+        Note that this list only displays **active** matches. When the game server process stops, 
+        the match is almost instantly removed from the list.
+      responses:
+        200:
+          description: |
+            A list of active matches started by this user have been fetched.
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                {
+                  "match":
+                    {
+                      "83433e65-caac-4820-b8e7-875b86dd4994":
+                        {
+                          "matchKey": "83433e65-caac-4820-b8e7-875b86dd4994",
+                          "gameKey": "shooter-game",
+                          "locationKey": "eu-west",
+                          "host": "127.0.0.1",
+                          "created": 1588944190593,
+                          "port": { "game": 63857, "gotv": 57599 },
+                        },
+                      "76ffc16c-6b0b-4d55-bf8d-ae74b6d962ae":
+                        {
+                          "matchKey": "76ffc16c-6b0b-4d55-bf8d-ae74b6d962ae",
+                          "gameKey": "shooter-game",
+                          "locationKey": "us-central",
+                          "host": "192.168.1.1",
+                          "created": 1583164808454,
+                          "port": { "game": 56900, "query": 53912 },
+                        },
+                    },
+                }
+        401:
+          description: |
+            You are not authorized to fetch a match.
+
+  /command/stop-match:
+    post:
+      operationId: stop-match
+      deprecated: true
+      summary: "Stop a match"
+      description: |
+        Force shutdown the game server.
+
+        The game server process inside the container will receive `SIGTERM`.
+
+        > ### Important
+        > 
+        > Depending on the game server it can take up to 20 seconds before the shutdown is completed.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: false
+              required:
+                - matchKey
+              properties:
+                matchKey: { type: string, minLength: 1 }
+            example: { "matchKey": "my-awesome-match" }
+      responses:
+        "204":
+          description: |
+            Match was stopped
+        "401":
+          description: |
+            You are not authorized
+        "404":
+          description: |
+            Match was not found
+        "409":
+          description: |
+            Match has already been stopped
+
+  /fetch/log:
+    get:
+      operationId: log-fetch
+      deprecated: true
+      summary: "Get match logs"
+      description: |
+        Fetch the output that the game server writes to standard out (stdout).
+
+        This endpoint can used to provide secure and automated access to debug server related issues.
+
+        > ### Important
+        > Note that the logs can only be fetched after the match is stopped and that the logs are available 
+        > up to **four** hours after the match has entered the stopped state.
+
+      parameters:
+        - name: matchKey
+          in: query
+          required: true
+          schema:
+            type: string
+            minLength: 1
+      responses:
+        "200":
+          description: |
+            Logs of the specified match have been retrieved.
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                {
+                  "3":
+                    {
+                      "lineKey": 3,
+                      "payload": "Server will auto-restart if there is a crash.\n",
+                    },
+                  "4":
+                    {
+                      "lineKey": 4,
+                      "payload": "LD_LIBRARY_PATH=/home/steam/csgo/bin:/home/steam/csgo:/home/steam/csgo/bin:\n",
+                    },
+                  "5": { "lineKey": 5, "payload": "#\n" },
+                  "6": { "lineKey": 6, "payload": "#Console initialized.\n" },
+                }
+        401:
+          description: |
+            You are not authorized to fetch logs.
+
+        404:
+          description: |
+            Could not find the specified match.
 
 components:
   securitySchemes:
