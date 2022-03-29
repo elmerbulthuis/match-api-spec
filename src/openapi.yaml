@@ -529,14 +529,18 @@ paths:
   /metrics:
     get:
       operationId: metrics
-      summary: Scrape metrics
+      summary: Scrapes metrics of sessions that are tied to your API key.
       responses:
-        "200":
-          description: ok
+        200:
+          description: |
+            Successfully scraped metrics of your sessions.
           content:
-            "text/plain":
+            text/plain:
               schema:
                 type: string
+                description: |
+                  A metric as a key-value pair.
+                example: session_count 1
 
   /command/start-match:
     post:
