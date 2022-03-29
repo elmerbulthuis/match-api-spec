@@ -205,6 +205,7 @@ paths:
               is returned.
             additionalProperties:
               type: string
+      summary: "Lists a collection of active sessions."
       description: |
         Lists all of the active sessions that are tied to your API token. Note that it only returns
         sessions that are active. Those that have already been stopped, will not be included.
@@ -258,7 +259,7 @@ paths:
                         port:
                           type: object
                           description: |
-                            The list of exposed ports for this container.
+                            A record of exposed ports for this container.
                           additionalProperties:
                             type: number
                           example: { "port": { "80/tcp": 49160 } }
@@ -546,12 +547,14 @@ paths:
     post:
       deprecated: true
       operationId: start-match
-      summary: "Create a match"
+      summary: Create a new match.
       description: |
-        Create a new on-demand game server.
+        Allocate a new game session in a specific region. Each session is to be identified by a
+        unique identifier that is provided by the caller. It is recommended to use a UUID.
 
-        The `config` object can be used to pass any dynamic parameters directly to the game server executable.
-        Either as a startup parameters, configfile or environment variable. For more info see https://docs.gameye.com/docs/using-the-igniter-tool
+        The `config` object can be used to pass any dynamic parameters directly to the game server 
+        executable. Either as a startup parameters, configfile or environment variable. For more 
+        info see https://docs.gameye.com/docs/using-the-igniter-tool
 
         > ### Important
         > In extreme cases it can take up 50 seconds to start a server, after which we produce a time-out.
@@ -575,13 +578,13 @@ paths:
                   type: string
                   minLength: 1
                   description: |
-                    unique match id
+                    The unique match id (otherwise known as the session id).
                   example: "my-awesome-match"
                 gameKey:
                   type: string
                   minLength: 1
                   description: |
-                    game id
+                    The image of the application.
                   example: "csgo"
                 locationKeys:
                   type: array
@@ -591,9 +594,8 @@ paths:
                     example: "eu-west"
                   minItems: 1
                   description: |
-                    location id
-
-                    for available locations see https://docs.gameye.com/docs/choosing-your-server-locations
+                    A list of preferred locations to try and host the session at. For available 
+                    locations, see: https://docs.gameye.com/docs/choosing-your-server-locations
                 templateKey:
                   type: string
                   minLength: 1
@@ -604,19 +606,25 @@ paths:
                   type: object
                   additionalProperties: true
                   description: |
-                    any custom parameters you want to add
+                    A record of custom configurational parameters to include the application.
                 endCallbackUrl:
                   type: string
                   minLength: 1
-                  description: "URL to call when the match has ended, optional"
+                  description: |
+                    The URL to call when the match has ended. This field is optional.
                   example: "https://yourbackend/matchid"
                 restart:
                   type: boolean
-                  description: "A flag that indicates whether the match should always restart or not. This is an optional field and will yield 'false' if not provided."
+                  description: |
+                    A flag that indicates whether the match should always restart or not. 
+                    This is an optional field and will default to 'false' if not provided.
                 sortAdvantages:
                   type: array
-                  description: "A list of advantages to sort on whilst searching for an appropriate machine to run the match on."
-                  items: { type: string }
+                  description: |
+                    A list of advantages to sort on whilst searching for an appropriate machine 
+                    to run the match on.
+                  items:
+                    type: string
                   default: ["price"]
             example:
               {
@@ -660,7 +668,6 @@ paths:
                     type: object
                     additionalProperties:
                       type: integer
-
               example:
                 {
                   "id": "my-awesome-match",
@@ -670,18 +677,23 @@ paths:
                   "port": { "game": 65424, "query": 53423 },
                   "created": 1589471457344,
                 }
-        "400":
+        400:
           description: |
-            Bad request
-        "401":
+            Bad request. This may imply that the given request has invalid syntax.
+
+        401:
           description: |
-            You are not authorized
-        "409":
+            You are not authorized. Please make sure that the included bearer token is correct.
+
+        409:
           description: |
-            MatchKey has already been used
-        "503":
+            The matchKey has already been used before. Please use a different id. It is
+            recommended to use a universally unique id (UUID).
+
+        503:
           description: |
-            Location temporary out of capacity
+            This location is temporary out of capacity. Please try a different location
+            or wait a few minutes.
 
   /query/match:
     get:
@@ -694,17 +706,23 @@ paths:
           style: deepObject
           schema:
             type: object
+            description: |
+              A list or record of tags to filter a list of sessions on. If none of the
+              sessions meet the provided filter criteria, naturally an empty list of sessions
+              is returned.
             additionalProperties:
               type: string
       summary: "Get all matches"
       description: |
-        Fetches a list of all active matches.
+        Lists all of the active sessions that are tied to your API token. Note that it only returns
+        sessions that are active. Those that have already been stopped, will not be included.
 
-        Note that this list only displays **active** matches. When the game server process stops, the match is almost instantly removed from the list.
+        Note that this endpoint has been marked as deprecated and is scheduled for removal. Please
+        use the `/session` endpoint.
       responses:
         "200":
           description: |
-            Retrieved all matches
+            Successfully looked up all of the active sessions that are tied to your API token.
           content:
             application/json:
               schema:
@@ -727,16 +745,30 @@ paths:
                       properties:
                         matchKey:
                           type: string
+                          description: |
+                            The unique identifier of the session.
                         gameKey:
                           type: string
+                          description: |
+                            The name of the image of the game that is hosted inside the container.
                         locationKey:
                           type: string
+                          description: |
+                            The location or region that the game session is hosted in.
                         host:
                           type: string
+                          description: |
+                            The IP address of the host machine the game session is hosted on.
+                          example: "a.b.c.d"
                         created:
                           type: number
+                          description: |
+                            The unix timestamp the session was created in.
+                          example: 1648472895000
                         port:
                           type: object
+                          description: |
+                            A record of exposed ports for this container.
                           additionalProperties:
                             type: number
                         labels:
@@ -775,22 +807,37 @@ paths:
                 }
         401:
           description: |
-            You are not authorized to fetch matches.
+            You are not authorized to fetch matches. Please make sure that the 
+            included bearer token is correct.
 
   /fetch/match:
     get:
       operationId: get-matches-fetch
       deprecated: true
+      parameters:
+        - name: filter
+          in: query
+          required: false
+          style: deepObject
+          schema:
+            type: object
+            description: |
+              A list or record of tags to filter a list of sessions on. If none of the
+              sessions meet the provided filter criteria, naturally an empty list of sessions
+              is returned.
+            additionalProperties:
+              type: string
       summary: "Get all matches"
       description: |
-        Fetches a list of all active matches.
+        Lists all of the active sessions that are tied to your API token. Note that it only returns
+        sessions that are active. Those that have already been stopped, will not be included.
 
-        Note that this list only displays **active** matches. When the game server process stops, 
-        the match is almost instantly removed from the list.
+        Note that this endpoint has been marked as deprecated and is scheduled for removal. Please
+        use the `/session` endpoint.
       responses:
         200:
           description: |
-            A list of active matches started by this user have been fetched.
+            Successfully looked up all of the active sessions that are tied to your API token.
           content:
             application/json:
               schema:
@@ -821,7 +868,8 @@ paths:
                 }
         401:
           description: |
-            You are not authorized to fetch a match.
+            You are not authorized to fetch a match. Please make sure that the 
+            included bearer token is correct.
 
   /command/stop-match:
     post:
