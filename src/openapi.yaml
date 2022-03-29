@@ -53,16 +53,19 @@ paths:
                   description: |
                     The unique identifier of the session.
                   minLength: 1
+                  example: "f7965a22-e327-4541-a30e-8262890d3a29"
                 location:
                   type: string
                   description: |
                     The location or region that the game session is preferred to be hosted in.
                   minLength: 1
+                  example: "europe"
                 image:
                   type: string
                   description: |
                     The name of the image of the game to host inside a container.
                   minLength: 1
+                  example: "nginx"
                 env:
                   type: object
                   description: |
@@ -86,6 +89,7 @@ paths:
                     Indicates whether this session must be automatically restarted on failure.
                     The container will not be restarted in case of a manual termination.
                   type: boolean
+                  example: false
                 labels:
                   type: object
                   additionalProperties:
@@ -101,7 +105,7 @@ paths:
 
             example:
               {
-                "id": "this-is-my-test-session-101",
+                "id": "f7965a22-e327-4541-a30e-8262890d3a29",
                 "location": "europe",
                 "image": "my-very-special-game",
                 "env": { "my-secret": "<my_secret_value" },
@@ -238,14 +242,17 @@ paths:
                           type: string
                           description: |
                             The unique identifier of the session.
+                          example: "f7965a22-e327-4541-a30e-8262890d3a29"
                         image:
                           type: string
                           description: |
                             The name of the image of the game that is hosted inside the container.
+                          example: "nginx"
                         location:
                           type: string
                           description: |
                             The location or region that the game session is hosted in.
+                          example: "europe"
                         host:
                           type: string
                           description: |
@@ -309,7 +316,7 @@ paths:
       operationId: session-stop
       description: |
         Stops an active session from running by killing the underlying container. The container
-        is killed by sending in a SIGTERM signal. This process may take a few seconds to complete.
+        is killed by sending in a SIGTERM signal.
 
       parameters:
         - name: id
@@ -351,8 +358,9 @@ paths:
         Please note that the artifact is only available for download after the session has been
         terminated and will be downloaded directly from the container itself.
 
-        Also note that the container will stay on the machine that the session was running on for 
-        at most 8 hours. This means that your artifact may or may not be available post termination.
+        The artifacts are available for download from the underlying container up until the 
+        container is removed from its host machine. This means that your logs may or 
+        may not be available post-termination.
       parameters:
         - name: session
           in: query
@@ -389,7 +397,7 @@ paths:
           description: |
             Could not find a session with the given session id. It is possible that either the
             session has never existed at all or the container's lifespan on the machine has
-            expired (with regards to the at-most 8 hour window).
+            expired.
 
   /logs:
     get:
@@ -454,6 +462,7 @@ paths:
                     type: string
                     description: "The log line outputted from the underlying stream."
                     minLength: 0
+                    example: "2022/03/29 13:37:26 [notice] 1#1: start worker process 30"
             "text/plain": {}
 
         401:
@@ -477,8 +486,8 @@ paths:
         Please note that the logs are only available for retrieval after the session has been
         terminated and will be taken directly from the container itself.
 
-        Also note that the container will stay on the machine that the session was running on for 
-        at most 8 hours. This means that your logs may or may not be available post termination.
+        The logs of the container are available up until the container is removed from the 
+        underlying machine. This means that your logs may or may not be available post-termination.
 
         Unlike the `/logs` endpoint, this endpoint does NOT continue to stream new logs from the
         container. Once all logs have been retrieved, the underlying connection is closed.
@@ -560,7 +569,7 @@ paths:
               is returned.
             additionalProperties:
               type: string
-      summary: "Get all matches"
+      summary: Gets a list of active sessions
       description: |
         Lists all of the active sessions that are tied to your API token. Note that it only returns
         sessions that are active. Those that have already been stopped, will not be included.
@@ -723,10 +732,9 @@ paths:
     post:
       operationId: stop-match
       deprecated: true
-      summary: "Stops a session"
+      summary: Stops a session
       description: |
         Forcefully terminates a session, by sending the underlying container a SIGTERM signal.
-        It may take up to 20 seconds to fully terminate the session.
 
         Note that this endpoint has been marked as deprecated and is scheduled for removal. Please
         use the `/session` endpoint with the 'DELETE' method.
@@ -770,11 +778,6 @@ components:
       type: http
       scheme: bearer
       bearerFormat: token
-      description: |
-        We use Bearer Tokens for authentication. 
-        You must send this token in the Authorization header in all requests.
-
-        ```Authorization: Bearer <token>```
 
 externalDocs:
   url: https://docs.gameye.com
