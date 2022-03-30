@@ -21,6 +21,7 @@ info:
 
 servers:
   - url: https://api.gameye.io
+    description: The main production environment.
 
 security:
   - api-token: []
@@ -209,7 +210,7 @@ paths:
               is returned.
             additionalProperties:
               type: string
-      summary: "Lists a collection of active sessions."
+      summary: Lists a collection of active sessions.
       description: |
         Lists all of the active sessions that are tied to your API token. Note that it only returns
         sessions that are active. Those that have already been stopped, will not be included.
@@ -347,7 +348,7 @@ paths:
   /artifacts:
     get:
       operationId: artifacts
-      summary: "Download an artifact file from the underlying container."
+      summary: Download an artifact file from the underlying container.
       description: |
         Initiates a download of an artifact which could be a file or a folder inside the underlying
         container. The path should be an absolute Unix path to a specific file or folder.
@@ -402,7 +403,7 @@ paths:
   /logs:
     get:
       operationId: stream-std-logs
-      summary: "Get real-time logs"
+      summary: Get real-time logs
       description: |
         Streams the output that the game server writes to standard out-and standard err. Unlike 
         /query/log, this endpoint opens up a stream that can be invoked-and kept open until the
@@ -476,7 +477,7 @@ paths:
   /query/log:
     get:
       operationId: log
-      summary: "Retrieves all logs from the container"
+      summary: Retrieves all logs from the container
       description: |
         Retrieves all of the logs of a session from its underlying container. Logs written to both
         STDOUT and STDERR will be returned. This endpoint can used to provide secure and automated 
@@ -686,7 +687,7 @@ paths:
               is returned.
             additionalProperties:
               type: string
-      summary: "Get all matches"
+      summary: Get all matches
       description: |
         Lists all of the active sessions that are tied to your API token. Note that it only returns
         sessions that are active. Those that have already been stopped, will not be included.
