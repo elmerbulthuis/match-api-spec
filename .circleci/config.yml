@@ -2,16 +2,16 @@ version: 2.1
 
 jobs:
   install:
-    docker: [image: circleci/node:14]
+    docker: [image: circleci/node:16]
     steps:
       - checkout
-      - run: npm install
+      - run: npm ci
       - persist_to_workspace:
           root: .
           paths: [node_modules]
 
   build:
-    docker: [image: circleci/node:14]
+    docker: [image: circleci/node:16]
     steps:
       - checkout
       - attach_workspace: { at: . }
@@ -21,14 +21,14 @@ jobs:
           paths: [out]
 
   test:
-    docker: [image: circleci/node:14]
+    docker: [image: circleci/node:16]
     steps:
       - checkout
       - attach_workspace: { at: . }
-      - run: ./test
+      - run: npm run lint
 
   publish-npm:
-    docker: [image: circleci/node:14]
+    docker: [image: circleci/node:16]
     steps:
       - attach_workspace: { at: . }
       - run: echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" >> ~/.npmrc

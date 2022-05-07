@@ -1,6 +1,10 @@
 lint:
+  extends:
+    - recommended
   rules:
     info-description: false
     info-license: false
     no-empty-servers: false
     operation-summary: false
+    operation-4xx-response: false
+    no-unused-components: false

@@ -7,7 +7,6 @@ build: \
 	out/static/version.txt \
 	out/static/openapi.yaml \
 	out/static/openapi.json \
-	out/static/index.html \
 	out/npm/ \
 
 rebuild: clean build
@@ -27,10 +26,6 @@ out/static/openapi.yaml: src/openapi.yaml
 out/static/openapi.json: out/static/openapi.yaml
 	@mkdir --parents $(@D)
 	`npm bin`/js-yaml $< > $@
-
-out/static/index.html: out/static/openapi.yaml
-	@mkdir --parents $(@D)
-	`npm bin`/redoc-cli bundle $< --output $@
 
 out/npm/: out/static/openapi.yaml
 	`npm bin`/oas3ts-generator package \
