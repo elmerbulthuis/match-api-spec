@@ -775,6 +775,56 @@ paths:
           description: |
             This session has already been terminated.
 
+  /available-location/{image}:
+    parameters:
+      - name: image
+        in: path
+        required: true
+        schema:
+          type: string
+        description: The id of the image
+    get:
+      summary: |
+        Retrieve all locations that are currently able to host your image, including an ip that you
+        may ping to figure out the latency to this location. Please do not cache this list anywhere
+        as it changes always
+      responses:
+        "200":
+          description: Ok, locations are in the body
+          content:
+            "application/json":
+              schema:
+                type: object
+                additionalProperties: false
+                required:
+                  - locations
+                properties:
+                  locations:
+                    type: array
+                    items:
+                      type: object
+                      required:
+                        - id
+                        - ips
+                      properties:
+                        id:
+                          type: string
+                        ips:
+                          type: array
+                          items:
+                            type: string
+                            description: |
+                              ip address (either v4 or v6) that may be used to ping this location.
+                              Please do not store this ip address anywhere, it is very dynamic!
+
+        "401":
+          description: |
+            Not authorized!
+
+        "404":
+          description: |
+            Image not found or you are not authorized to use this image.
+
 components:
   securitySchemes:
     api-token:
