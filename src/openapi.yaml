@@ -784,6 +784,7 @@ paths:
           type: string
         description: The id of the image
     get:
+      operationId: get-available-locations
       summary: |
         Retrieve all locations that are currently able to host your image, including an ip that you
         may ping to figure out the latency to this location. Please do not cache this list anywhere
